@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#7c3aed">
-  <title>Pokémon Champions Manager v0.9</title>
+  <title>Pokémon Champions Manager v1.0</title>
   <style>
     :root{
       --bg:#0f1020;--card:#1a1b33;--card2:#23244a;--txt:#f6f7fb;--muted:#b8bad3;
@@ -57,6 +57,13 @@
     .savedBox{background:#111327;border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0}
     .tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:3px 7px;margin:2px;background:var(--card2);color:var(--muted)}
     .twoCols{display:grid;grid-template-columns:1fr;gap:12px}
+
+    .advisorGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:10px 0}
+    .buildCard{background:#111327;border:1px solid var(--line);border-radius:14px;padding:10px}
+    .buildCard h3{margin:0 0 6px;font-size:15px}
+    .scoreBadge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:28px;border-radius:999px;background:var(--accent);color:#111827;font-weight:900;font-size:12px}
+    .miniList{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:13px}
+    .advisorTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
     @media (min-width:760px){.twoCols{grid-template-columns:1fr 1fr}}
 
     @media (min-width:760px){h1{font-size:22px}.bottomNav{max-width:980px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}}
@@ -65,8 +72,8 @@
 <body>
 <header>
   <div class="wrap">
-    <h1>Pokémon Champions Manager <span class="muted">v0.9 Battle Format Builder</span></h1>
-    <div class="sub">One-file · Battle Format Builder · import/export JSON · dati personali locali</div>
+    <h1>Pokémon Champions Manager <span class="muted">v1.0 Meta Build Advisor</span></h1>
+    <div class="sub">One-file · Meta Build Advisor · Singolo/Doppio · import/export JSON · dati personali locali</div>
     <nav class="tabsTop" id="tabsTop"></nav>
   </div>
 </header>
@@ -113,6 +120,24 @@
       </div>
       <div id="battleBuilder"></div>
     </div>
+
+    <div class="card">
+      <div class="advisorTitle">
+        <h2>Meta Build Advisor v1.0</h2>
+        <span class="tag">mosse · natura · statistiche · strumento</span>
+      </div>
+      <p class="muted">Consigli automatici separati per Singolo 3v3 e Doppio. Non usa IA integrata: usa dati locali aggiornabili via JSON.</p>
+      <div class="formatTabs">
+        <button id="advisorSinglesBtn" class="active" onclick="setFormatTab('singles')">Advisor Singolo</button>
+        <button id="advisorDoublesBtn" onclick="setFormatTab('doubles')">Advisor Doppio</button>
+      </div>
+      <div class="row">
+        <button onclick="renderAdvisor(true)" class="good">Genera consiglio formato</button>
+        <button onclick="applyAdvisorToDraft()" class="secondary">Porta consiglio nel builder</button>
+      </div>
+      <div id="advisorResult" class="notice">Seleziona Singolo o Doppio e genera il consiglio.</div>
+    </div>
+
   </section>
 
   <section id="rosa">
@@ -155,7 +180,7 @@
       <div class="row">
         <button onclick="importFromFile()">Importa file JSON</button>
         <button onclick="exportJson()" class="secondary">Esporta JSON</button>
-        <button onclick="resetData()" class="danger">Reset dati v0.9</button>
+        <button onclick="resetData()" class="danger">Reset dati v1.0</button>
       </div>
       <div id="importStatus" class="notice">Nessun import eseguito in questa sessione.</div>
       <textarea id="jsonBox" placeholder="Qui puoi incollare o vedere il JSON..."></textarea>
@@ -176,9 +201,9 @@
 
 
 <script>
-const VERSION = "v0.9-battle-format-builder";
-const STORE_KEY = "pkmn_champions_manager_v09";
-const OLD_STORE_KEYS = ["pkmn_champions_manager_v08"];
+const VERSION = "v1.0-meta-build-advisor";
+const STORE_KEY = "pkmn_champions_manager_v10";
+const OLD_STORE_KEYS = ["pkmn_champions_manager_v09","pkmn_champions_manager_v08"];
 
 const emptyBuild = () => ({
   item:"",
@@ -194,9 +219,10 @@ const emptyBuild = () => ({
 const defaultData = {
   version: VERSION,
   pv: 8366,
-  currentTeam: ["Lucario","Spiritomb","Sylveon","Dragonite","Snorlax","Raichu"],
+  currentTeam: ["Lucario","Annihilape","Sylveon","Dragonite","Snorlax","Spiritomb"],
   assignedItems: {
     "Lucario":"Lucarite",
+    "Annihilape":"",
     "Spiritomb":"Baccacedro",
     "Sylveon":"Rapidartiglio",
     "Dragonite":"Dragonitite",
@@ -239,6 +265,126 @@ const defaultData = {
   notes: "Dati iniziali ricavati da video/screenshot: Squadra 1, box 19/30, oggetti e 8.366 PV."
 };
 
+
+const seedPokemonData = {
+  "Annihilape": {
+    owned:true,
+    role:"Fisico bulky / win condition Lotta-Spettro",
+    score:88,
+    formatScores:{singles:91,doubles:89},
+    types:["Lotta","Spettro"],
+    ability:"Forza Interiore",
+    currentMoves:["Pugno Furibondo","Pietrataglio","Provocazione","Facciata"],
+    currentNature:"Fiacca",
+    statsSeen:{"PS":187,"Attacco":167,"Difesa":145,"Attacco Speciale":70,"Difesa Speciale":99,"Velocità":110},
+    builds:{
+      singles:{item:"Baccacedro / Avanzi / Focalnastro",ability:"Forza Interiore; Agonismo se disponibile",nature:"Decisa / Scaltra / Cauta",statsFocus:"PS + Attacco + Difesa Speciale",moves:["Pugno Furibondo","Assorbipugno","Granfisico","Provocazione"],roles:["bulky setup","anti-stall","win condition"],notes:"Priorità alta. Entra subito nei candidati principali; Raichu è il primo taglio probabile."},
+      doubles:{item:"Baccacedro / Avanzi / Focalnastro",ability:"Agonismo se disponibile; Forza Interiore provvisoria",nature:"Decisa / Cauta",statsFocus:"PS + Attacco + bulk speciale",moves:["Pugno Furibondo","Assorbipugno","Protezione","Provocazione"],roles:["attaccante bulky","anti-support","anti-Intimidate"],notes:"In Doppio serve Protezione; ottimo accanto a Sylveon o supporti che gli danno tempo."}
+    }
+  },
+  "Lucario": {
+    formatScores:{singles:88,doubles:80},
+    builds:{
+      singles:{item:"Lucarite",ability:"Forza Interiore",nature:"Timida / Modesta",statsFocus:"Attacco Speciale + Velocità",moves:["Congiura","Sferapulsar","Cannonflash","Vuotonda"],roles:["setup speciale","cleaner","mega"],notes:"Buono in Singolo come cleaner dopo Congiura. Mantieni Lucarite."},
+      doubles:{item:"Lucarite / Focalnastro",ability:"Forza Interiore",nature:"Timida / Modesta",statsFocus:"Attacco Speciale + Velocità",moves:["Protezione","Sferapulsar","Cannonflash","Vuotonda"],roles:["attaccante speciale","pressione immediata"],notes:"In Doppio preferisce Protezione; meno autosufficiente che in Singolo."}
+    }
+  },
+  "Dragonite": {
+    formatScores:{singles:89,doubles:82},
+    builds:{
+      singles:{item:"Dragonitite",ability:"Multisquame",nature:"Decisa / Allegra se fisico; Modesta se speciale",statsFocus:"Attacco o Attacco Speciale + Velocità",moves:["Dragodanza","Dragartigli / Oltraggio","Terremoto","Extrarapido"],roles:["sweeper","priority","mega"],notes:"La build attuale speciale/mista è giocabile, ma la fisica con setup sembra più lineare per Singolo."},
+      doubles:{item:"Dragonitite / Baccaprugna",ability:"Multisquame",nature:"Decisa / Allegra",statsFocus:"Attacco + Velocità",moves:["Protezione","Extrarapido","Dragartigli","Fuocopugno / Terremoto"],roles:["attaccante fisico","priority"],notes:"In Doppio Protezione pesa molto; attenzione a Terremoto se colpisce alleati."}
+    }
+  },
+  "Sylveon": {
+    formatScores:{singles:84,doubles:88},
+    builds:{
+      singles:{item:"Avanzi / Baccacedro / Stolascelta",ability:"Pellefolletto",nature:"Modesta / Sicura",statsFocus:"PS + Attacco Speciale + Difesa",moves:["Granvoce","Palla Ombra","Sbadiglio","Calmamente / Protezione"],roles:["speciale folletto","anti-drago","bulky special"],notes:"Rapidartiglio è provvisorio: meglio uno strumento stabile."},
+      doubles:{item:"Baccacedro / Stolascelta / Avanzi",ability:"Pellefolletto",nature:"Modesta",statsFocus:"PS + Attacco Speciale",moves:["Granvoce","Protezione","Palla Ombra","Sbadiglio / Calmamente"],roles:["spread attacker","supporto speciale"],notes:"Granvoce è molto più preziosa in Doppio. Protezione consigliata."}
+    }
+  },
+  "Snorlax": {
+    formatScores:{singles:80,doubles:84},
+    builds:{
+      singles:{item:"Avanzi",ability:"Grassospesso",nature:"Cauta / Decisa",statsFocus:"PS + Attacco + Difesa Speciale",moves:["Corposcontro","Terremoto","Sbadiglio","Protezione / Maledizione"],roles:["bulky","status pressure"],notes:"Buono, ma soffre se resta troppo passivo."},
+      doubles:{item:"Avanzi / Baccacedro",ability:"Grassospesso",nature:"Decisa / Cauta",statsFocus:"PS + Attacco + Difesa Speciale",moves:["Corposcontro","Pesobomba","Protezione","Sbadiglio"],roles:["bulky attacker","trick room abuser"],notes:"Molto più interessante se Spiritomb piazza Distortozona."}
+    }
+  },
+  "Spiritomb": {
+    formatScores:{singles:75,doubles:83},
+    builds:{
+      singles:{item:"Baccacedro",ability:"Intrapasso",nature:"Calma / Modesta",statsFocus:"PS + Attacco Speciale + Difesa Speciale",moves:["Palla Ombra","Congiura","Provocazione","Fuocofatuo / Psichico"],roles:["bulky speciale","anti-setup"],notes:"In Singolo va usato con criterio: non è sempre nei migliori 3."},
+      doubles:{item:"Baccacedro / Focalnastro",ability:"Intrapasso",nature:"Calma / Sicura",statsFocus:"PS + Difese",moves:["Distortozona","Palla Ombra","Provocazione","Protezione"],roles:["setter Distortozona","supporto"],notes:"Ha senso se giochi Snorlax/Annihilape bulky. Altrimenti perde valore."}
+    }
+  },
+  "Gyarados": {
+    formatScores:{singles:90,doubles:81},
+    builds:{
+      singles:{item:"Baccaprugna / Luminpolvere / Focalnastro",ability:"Prepotenza se disponibile",nature:"Allegra / Decisa",statsFocus:"Attacco + Velocità",moves:["Dragodanza","Cascata","Sgranocchio","Terremoto / Gelodenti"],roles:["setup fisico","sweeper"],notes:"Candidato fortissimo in Singolo; da testare al posto di uno slot lento."},
+      doubles:{item:"Baccaprugna / Focalnastro",ability:"Prepotenza se disponibile",nature:"Decisa / Allegra",statsFocus:"PS + Attacco + Velocità",moves:["Protezione","Cascata","Sgranocchio","Gelodenti / Provocazione"],roles:["intimidate","attaccante fisico"],notes:"In Doppio vale molto se ha Prepotenza; senza, resta più offensivo che support."}
+    }
+  },
+  "Rotom Forma Vortice": {
+    formatScores:{singles:82,doubles:86},
+    builds:{
+      singles:{item:"Baccacedro / Avanzi",ability:"Levitazione",nature:"Modesta / Calma",statsFocus:"PS + Attacco Speciale + Difesa Speciale",moves:["Fulmine","Eterelama / mossa Volante","Invertivolt","Protezione / Tuononda"],roles:["pivot speciale","utility"],notes:"Alternativa più stabile di Raichu come Elettro utility."},
+      doubles:{item:"Baccacedro",ability:"Levitazione",nature:"Modesta / Calma",statsFocus:"PS + Attacco Speciale",moves:["Protezione","Fulmine","Invertivolt","Tuononda / mossa Volante"],roles:["pivot","speed control","immunità Terra"],notes:"Buon collante in Doppio; aiuta contro debolezze Terra."}
+    }
+  },
+  "Zoroark Forma di Hisui": {
+    formatScores:{singles:86,doubles:78},
+    builds:{
+      singles:{item:"Focalnastro / Stolascelta",ability:"Illusione",nature:"Timida / Modesta",statsFocus:"Attacco Speciale + Velocità",moves:["Palla Ombra","Ipervoce","Congiura","Lanciafiamme / Focalcolpo"],roles:["speciale veloce","anti-psico/spettro"],notes:"Molto interessante in Singolo come pressione speciale veloce."},
+      doubles:{item:"Focalnastro",ability:"Illusione",nature:"Timida",statsFocus:"Attacco Speciale + Velocità",moves:["Protezione","Palla Ombra","Ipervoce","Provocazione"],roles:["attaccante speciale","utility fragile"],notes:"In Doppio è più fragile; va protetto e usato con piano chiaro."}
+    }
+  },
+  "Raichu": {
+    formatScores:{singles:66,doubles:74},
+    builds:{
+      singles:{item:"Raichuite Y / Focalnastro",ability:"Parafulmine",nature:"Allegra / Ingenua",statsFocus:"Velocità + Attacco",moves:["Elettrotuffo / Fulmine","Bruciapelo se disponibile","Assorbipugno","Protezione / Apripista"],roles:["veloce utility"],notes:"Con Elettrocannone è troppo instabile. Primo candidato a uscire dal team."},
+      doubles:{item:"Raichuite Y / Focalnastro",ability:"Parafulmine",nature:"Allegra",statsFocus:"Velocità + PS",moves:["Bruciapelo se disponibile","Protezione","Fulmine","Elettrotela / Apripista"],roles:["supporto elettro","redirection elettro"],notes:"In Doppio può avere senso per Parafulmine, ma servono mosse support migliori."}
+    }
+  }
+};
+
+function mergeBuild(seed={}, current={}){
+  const out = {...seed, ...(current || {})};
+  if (!Array.isArray(out.moves) || out.moves.length === 0) out.moves = Array.isArray(seed.moves) ? [...seed.moves] : [];
+  if (!Array.isArray(out.roles) || out.roles.length === 0) out.roles = Array.isArray(seed.roles) ? [...seed.roles] : [];
+  return out;
+}
+function mergeSeedPokemonData(data){
+  data.roster = Array.isArray(data.roster) ? data.roster.map(normalizePokemon) : [];
+  const byName = new Map(data.roster.map(p => [p.name.toLowerCase(), p]));
+  for (const [name, seed] of Object.entries(seedPokemonData)){
+    let p = byName.get(name.toLowerCase());
+    if (!p){
+      p = normalizePokemon({name, owned:true, role:seed.role || "Da classificare", score:seed.score || 65});
+      data.roster.push(p);
+      byName.set(name.toLowerCase(), p);
+    }
+    p.role = p.role && p.role !== "Da classificare" ? p.role : (seed.role || p.role);
+    p.score = Number(p.score || seed.score || 65);
+    p.formatScores = {...(seed.formatScores || {}), ...(p.formatScores || {})};
+    p.types = Array.isArray(p.types) && p.types.length ? p.types : (seed.types || []);
+    p.ability = p.ability || seed.ability || "";
+    p.currentNature = p.currentNature || seed.currentNature || "";
+    p.currentMoves = Array.isArray(p.currentMoves) && p.currentMoves.length ? p.currentMoves : (seed.currentMoves || []);
+    p.statsSeen = p.statsSeen || seed.statsSeen || {};
+    p.builds = p.builds || {};
+    p.builds.singles = mergeBuild(seed.builds?.singles || emptyBuild(), p.builds.singles || {});
+    p.builds.doubles = mergeBuild(seed.builds?.doubles || emptyBuild(), p.builds.doubles || {});
+  }
+  if (!data.currentTeam.includes("Annihilape")){
+    data.currentTeam = data.currentTeam.filter(x => x !== "Raichu");
+    data.currentTeam.splice(1,0,"Annihilape");
+    data.currentTeam = data.currentTeam.slice(0,6);
+  }
+  data.assignedItems = data.assignedItems || {};
+  if (data.assignedItems["Annihilape"] === undefined) data.assignedItems["Annihilape"] = "";
+  return data;
+}
+
 let state = loadData();
 let activeFormatTab = "singles";
 let draftSingles = {selected:[], lead:"", name:"Default 3v3", notes:""};
@@ -276,6 +422,11 @@ function normalizePokemon(p){
   out.owned = out.owned !== false;
   out.score = Number(out.score || 65);
   out.role = out.role || "Da classificare";
+  out.formatScores = out.formatScores || {};
+  out.types = Array.isArray(out.types) ? out.types : [];
+  out.currentMoves = Array.isArray(out.currentMoves) ? out.currentMoves : [];
+  out.currentNature = out.currentNature || "";
+  out.statsSeen = out.statsSeen || {};
   out.builds = out.builds || {};
   out.builds.singles = {...emptyBuild(), ...(out.builds.singles || {})};
   out.builds.doubles = {...emptyBuild(), ...(out.builds.doubles || {})};
@@ -314,6 +465,7 @@ function normalizeImported(obj){
     backups: Array.isArray(x.backups) ? x.backups : [],
     notes: x.notes || ""
   }));
+  mergeSeedPokemonData(out);
   out.version = VERSION;
   return out;
 }
@@ -356,7 +508,7 @@ function render(){
   document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${esc(x)}</span>`).join("");
   document.getElementById("recruitsList").innerHTML = renderRecruits();
   const active = document.getElementById("team")?.classList.contains("active");
-  if (active) renderBattleBuilder();
+  if (active){ renderBattleBuilder(); renderAdvisor(false); }
 }
 function renderRoster(){
   const rows = state.roster.map(p => `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.role||"Da classificare")}</td><td>${esc(p.score||65)}</td><td>${esc(state.assignedItems[p.name]||"—")}</td></tr>`).join("");
@@ -370,6 +522,7 @@ function renderRecruits(){
 function setFormatTab(tab){
   activeFormatTab = tab;
   renderBattleBuilder();
+  renderAdvisor(false);
 }
 function teamMemberCards(mode){
   const selected = mode === "singles" ? draftSingles.selected : draftDoubles.leadPair;
@@ -545,8 +698,89 @@ function deleteDoublesPlan(id){
   saveData();
 }
 
+
+function getP(name){return state.roster.find(p => p.name === name) || normalizePokemon({name});}
+function fmtScore(p, format){return Number(p.formatScores?.[format] || p.score || 65);}
+function ownedPool(){return state.roster.filter(p => p.owned !== false);}
+function buildFor(name, format){return getP(name).builds?.[format] || emptyBuild();}
+function movesText(moves){return Array.isArray(moves) && moves.length ? moves.map(esc).join(" · ") : "Da definire";}
+function advisorRecommendation(format=activeFormatTab){
+  const pool = ownedPool().map(p => ({...p, advisorScore:fmtScore(p, format)}))
+    .sort((a,b) => b.advisorScore - a.advisorScore);
+  if (format === "singles"){
+    const team6 = pool.slice(0,6).map(p=>p.name);
+    const selection3 = pool.slice(0,3).map(p=>p.name);
+    const lead = selection3.includes("Annihilape") ? "Annihilape" : selection3[0];
+    return {
+      format:"singles", title:"Consiglio Singolo 3v3", team6, selection3, lead,
+      summary:"Il Singolo premia autonomia, pressione offensiva, setup e copertura immediata. Annihilape entra tra le priorità alte; Raichu scende perché il moveset attuale è instabile.",
+      warnings:["Non mischiare piano Distortozona e hyper offense nello stesso trio.","Rapidartiglio su Sylveon è provvisorio: meglio uno strumento più stabile.","Verifica se Dragonite può passare a una build fisica più lineare."]
+    };
+  }
+  const preferred = ["Annihilape","Sylveon","Rotom Forma Vortice","Snorlax","Spiritomb","Dragonite"].filter(n => pool.some(p=>p.name===n));
+  const fillers = pool.map(p=>p.name).filter(n => !preferred.includes(n));
+  const team6 = [...preferred, ...fillers].slice(0,6);
+  const leadPair = team6.includes("Annihilape") && team6.includes("Sylveon") ? ["Annihilape","Sylveon"] : team6.slice(0,2);
+  const backups = team6.filter(n => !leadPair.includes(n)).slice(0,4);
+  return {
+    format:"doubles", title:"Consiglio Doppio", team6, leadPair, backups,
+    summary:"Il Doppio premia coppie, Protezione, pressione spread, supporto e controllo ritmo. Annihilape + Sylveon è la prima lead semplice da provare; Spiritomb + Snorlax resta piano Distortozona separato.",
+    warnings:["Senza Protezione il Doppio diventa molto più fragile.","Se giochi Distortozona, scegli davvero compagni lenti/bulky.","Raichu vale solo se sfrutti Parafulmine/supporto, non come semplice attaccante."]
+  };
+}
+function renderBuildCards(names, format){
+  return `<div class="advisorGrid">${names.map(name => {
+    const p = getP(name), b = buildFor(name, format);
+    return `<div class="buildCard">
+      <div class="advisorTitle"><h3>${esc(name)}</h3><span class="scoreBadge">${fmtScore(p, format)}</span></div>
+      <div><span class="tag">${esc(format === "singles" ? "Singolo" : "Doppio")}</span>${(b.roles||[]).map(r=>`<span class="tag">${esc(r)}</span>`).join("")}</div>
+      <ul class="miniList">
+        <li><b>Strumento:</b> ${esc(b.item || state.assignedItems[name] || "Da definire")}</li>
+        <li><b>Abilità:</b> ${esc(b.ability || p.ability || "Da definire")}</li>
+        <li><b>Natura:</b> ${esc(b.nature || "Da definire")}</li>
+        <li><b>Statistiche:</b> ${esc(b.statsFocus || b.evs || "Da definire")}</li>
+        <li><b>Mosse:</b> ${movesText(b.moves)}</li>
+      </ul>
+      ${b.notes ? `<div class="muted" style="margin-top:8px">${esc(b.notes)}</div>` : ""}
+    </div>`;
+  }).join("")}</div>`;
+}
+function renderAdvisor(force=false){
+  const el = document.getElementById("advisorResult");
+  if (!el) return;
+  document.getElementById("advisorSinglesBtn")?.classList.toggle("active", activeFormatTab === "singles");
+  document.getElementById("advisorDoublesBtn")?.classList.toggle("active", activeFormatTab === "doubles");
+  const rec = advisorRecommendation(activeFormatTab);
+  if (activeFormatTab === "singles"){
+    el.innerHTML = `<div><b>${rec.title}</b></div>
+      <div class="notice"><b>Team da 6 consigliato:</b><br>${rec.team6.map(n=>`<span class="pill good">${esc(n)}</span>`).join("")}</div>
+      <div class="notice"><b>Trio 3v3:</b><br>${rec.selection3.map(n=>`<span class="pill good">${esc(n)}</span>`).join("")}<br><b>Lead:</b> ${esc(rec.lead)}</div>
+      <p>${esc(rec.summary)}</p>
+      ${renderBuildCards(rec.selection3, "singles")}
+      <div class="dangerBox"><b>Attenzioni:</b><ul class="miniList">${rec.warnings.map(w=>`<li>${esc(w)}</li>`).join("")}</ul></div>`;
+  } else {
+    el.innerHTML = `<div><b>${rec.title}</b></div>
+      <div class="notice"><b>Team da 6 consigliato:</b><br>${rec.team6.map(n=>`<span class="pill good">${esc(n)}</span>`).join("")}</div>
+      <div class="notice"><b>Lead pair:</b><br>${rec.leadPair.map(n=>`<span class="pill good">${esc(n)}</span>`).join("")}<br><b>Backup/core:</b> ${rec.backups.map(n=>`<span class="pill">${esc(n)}</span>`).join("")}</div>
+      <p>${esc(rec.summary)}</p>
+      ${renderBuildCards([...rec.leadPair, ...rec.backups.slice(0,2)], "doubles")}
+      <div class="dangerBox"><b>Attenzioni:</b><ul class="miniList">${rec.warnings.map(w=>`<li>${esc(w)}</li>`).join("")}</ul></div>`;
+  }
+}
+function applyAdvisorToDraft(){
+  const rec = advisorRecommendation(activeFormatTab);
+  if (activeFormatTab === "singles"){
+    draftSingles = {selected:[...rec.selection3], lead:rec.lead, name:"Advisor Singolo 3v3", notes:rec.summary};
+  } else {
+    draftDoubles = {leadPair:[...rec.leadPair], backups:[...rec.backups], name:"Advisor Doppio", notes:rec.summary};
+  }
+  renderBattleBuilder();
+  renderAdvisor(false);
+  alert("Consiglio copiato nel builder. Salvalo se ti convince.");
+}
+
 function optimize(mode){
-  let pool = state.roster.filter(p=>p.owned!==false).map(p=>({...p, source:"box", netScore:Number(p.score||65)}));
+  let pool = state.roster.filter(p=>p.owned!==false).map(p=>({...p, source:"box", netScore:fmtScore(p, activeFormatTab)}));
   let budget = Number(state.pv||0);
   if (mode === "theory"){
     for (const r of state.recruits){
@@ -594,7 +828,7 @@ function importFromFile(){
       state = normalizeImported(JSON.parse(reader.result));
       saveData();
       document.getElementById("jsonFile").value = "";
-      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v0.9.`);
+      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v1.0.`);
       go("home");
     }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
   };
@@ -606,7 +840,7 @@ function importFromText(){
     if (!txt){ statusMsg("Incolla prima un JSON.", true); return; }
     state = normalizeImported(JSON.parse(txt));
     saveData();
-    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v0.9.`);
+    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v1.0.`);
     go("home");
   }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
 }
@@ -617,10 +851,10 @@ function exportJson(){
   const blob = new Blob([txt], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = "champions-manager-dati-export-v09.json";
+  a.href = url; a.download = "champions-manager-dati-export-v10.json";
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  statusMsg("Export v0.9 generato con build Singolo/Doppio, varianti 3v3 e piani Doppio.");
+  statusMsg("Export v1.0 generato con advisor build, mosse, nature, statistiche e dati Singolo/Doppio.");
   go("dati");
 }
 async function copyJson(){
@@ -631,7 +865,7 @@ async function copyJson(){
   catch(e){ statusMsg("JSON mostrato nel riquadro: copia manualmente.", true); }
 }
 function resetData(){
-  if (!confirm("Resetto i dati locali v0.9 e torno ai dati iniziali?")) return;
+  if (!confirm("Resetto i dati locali v1.0 e torno ai dati iniziali?")) return;
   state = normalizeImported(deepClone(defaultData));
   saveData();
   statusMsg("Reset completato.");

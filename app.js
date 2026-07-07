@@ -1,4 +1,4 @@
-const STORAGE_KEY = "champions-manager-data-v03";
+const STORAGE_KEY = "champions-manager-data-v04";
 let data = loadData();
 let deferredInstallPrompt = null;
 
@@ -205,19 +205,21 @@ function goToScreen(screenId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Navigazione robusta: funziona con mouse, touch e PWA installata.
+// Navigazione v0.4: usa hash link reali, quindi funziona anche se il browser gestisce male click/touch sui pulsanti.
+function screenFromHash() {
+  const id = (location.hash || "#home").replace("#", "");
+  return document.getElementById(id) ? id : "home";
+}
+function syncScreenFromHash() {
+  goToScreen(screenFromHash());
+}
 document.querySelector(".bottom-nav")?.addEventListener("click", (ev) => {
-  const btn = ev.target.closest("button[data-screen]");
-  if (!btn) return;
-  ev.preventDefault();
-  goToScreen(btn.dataset.screen);
+  const link = ev.target.closest("a[data-screen]");
+  if (!link) return;
+  // Non blocchiamo il comportamento nativo: cambia hash e poi sincronizza la schermata.
+  setTimeout(syncScreenFromHash, 0);
 });
-document.querySelector(".bottom-nav")?.addEventListener("touchend", (ev) => {
-  const btn = ev.target.closest("button[data-screen]");
-  if (!btn) return;
-  ev.preventDefault();
-  goToScreen(btn.dataset.screen);
-}, { passive: false });
+window.addEventListener("hashchange", syncScreenFromHash);
 $("pvInput").onchange = () => { data.pv = Number($("pvInput").value || 0); saveData(); };
 $("recalcHome").onclick = renderAll;
 $("optimizeBtn").onclick = () => renderTeamResult(optimize($("calcMode").value, $("teamStyle").value), $("calcMode").value);
@@ -242,11 +244,14 @@ $("addHireBtn").onclick = () => {
 };
 $("exportAiBtn").onclick = exportAI;
 $("downloadJsonBtn").onclick = () => download("champions-manager-dati.json", JSON.stringify(data, null, 2));
-$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { localStorage.removeItem("champions-manager-data-v02"); localStorage.removeItem("champions-manager-data-v03"); data = clone(DEFAULT_DATA); saveData(); } };
+$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { localStorage.removeItem("champions-manager-data-v02"); localStorage.removeItem("champions-manager-data-v03"); localStorage.removeItem("champions-manager-data-v04"); data = clone(DEFAULT_DATA); saveData(); } };
 $("jsonEditor").onchange = () => { try { data = JSON.parse($("jsonEditor").value); saveData(); } catch { alert("JSON non valido"); } };
 $("importJson").onchange = async (ev) => {
   const file = ev.target.files[0]; if (!file) return;
   try { data = JSON.parse(await file.text()); saveData(); } catch { alert("File JSON non valido"); }
 };
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
 renderAll();
+syncScreenFromHash();

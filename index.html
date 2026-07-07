@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#6d5dfc" />
-  <title>Champions Manager v0.3</title>
+  <title>Champions Manager v0.4</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -12,7 +12,7 @@
   <header class="app-header">
     <div>
       <p class="eyebrow">Pokémon Champions</p>
-      <h1>Team Manager <small style="font-size:12px;color:#aab0d6">v0.3</small></h1>
+      <h1>Team Manager <small style="font-size:12px;color:#aab0d6">v0.4</small></h1>
     </div>
     <button id="installBtn" class="pill hidden">Installa</button>
   </header>
@@ -128,13 +128,13 @@
     </section>
   </main>
 
-  <nav class="bottom-nav">
-    <button data-screen="home" class="active">Home</button>
-    <button data-screen="optimizer">Team</button>
-    <button data-screen="roster">Rosa</button>
-    <button data-screen="items">Oggetti</button>
-    <button data-screen="hires">Ingaggi</button>
-    <button data-screen="data">Dati</button>
+  <nav class="bottom-nav" aria-label="Navigazione principale">
+    <a href="#home" data-screen="home" class="active">Home</a>
+    <a href="#optimizer" data-screen="optimizer">Team</a>
+    <a href="#roster" data-screen="roster">Rosa</a>
+    <a href="#items" data-screen="items">Oggetti</a>
+    <a href="#hires" data-screen="hires">Ingaggi</a>
+    <a href="#data" data-screen="data">Dati</a>
   </nav>
 
   <script src="data.js"></script>

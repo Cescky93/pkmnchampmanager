@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#7c3aed">
-  <title>Pokémon Champions Manager v1.0</title>
+  <title>Pokémon Champions Manager v1.1</title>
   <style>
     :root{
       --bg:#0f1020;--card:#1a1b33;--card2:#23244a;--txt:#f6f7fb;--muted:#b8bad3;
@@ -66,37 +66,96 @@
     .advisorTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
     @media (min-width:760px){.twoCols{grid-template-columns:1fr 1fr}}
 
+
+
+    /* v1.1 visual refresh */
+    .hero{position:relative;overflow:hidden;background:
+      radial-gradient(circle at 15% 10%,rgba(163,230,53,.26),transparent 26%),
+      radial-gradient(circle at 88% 0%,rgba(124,58,237,.44),transparent 32%),
+      linear-gradient(135deg,#211b56,#12142e 55%,#0c0d1b);border:1px solid rgba(163,230,53,.22);border-radius:24px;padding:18px;margin-bottom:12px;box-shadow:0 18px 34px rgba(0,0,0,.28)}
+    .hero h2{font-size:24px;margin:0 0 6px;letter-spacing:-.02em}
+    .heroActions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+    .glass{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);border-radius:18px;padding:12px}
+    .statTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .statTile{background:rgba(17,19,39,.72);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:10px;min-height:72px}
+    .statTile b{display:block;font-size:20px;color:var(--accent)}
+    .statTile span{font-size:11px;color:var(--muted)}
+    .sectionTitle{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .compactCard{background:#111327;border:1px solid var(--line);border-radius:16px;padding:12px}
+    .teamSlots{display:grid;grid-template-columns:1fr;gap:10px}
+    .teamSlot{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;background:#111327;border:1px solid var(--line);border-radius:16px;padding:10px}
+    .slotNo{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,var(--accent2),#4f46e5);font-weight:900}
+    .slotInputs{display:grid;grid-template-columns:1fr;gap:6px}
+    .slotInputs select{margin:0;padding:9px}
+    .toolbar{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
+    .quickInputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+    .quickInputs input,.quickInputs select{margin:0}
+    .pokeCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:10px}
+    .pokeCard{position:relative;background:linear-gradient(180deg,#171936,#101225);border:1px solid var(--line);border-radius:18px;padding:12px;overflow:hidden}
+    .pokeCard:before{content:"";position:absolute;right:-24px;top:-24px;width:82px;height:82px;border-radius:999px;background:rgba(163,230,53,.08)}
+    .pokeTop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;position:relative}
+    .typeChip{display:inline-block;font-size:11px;border-radius:999px;padding:4px 8px;background:rgba(124,58,237,.25);border:1px solid rgba(124,58,237,.4);margin:2px;color:#ddd6fe}
+    .moveLine{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+    .formGrid{display:grid;grid-template-columns:1fr;gap:8px}
+    .formGrid input,.formGrid select{margin:0}
+    .aiBox{min-height:260px;font-size:12px;line-height:1.35}
+    .stickyActions{position:sticky;bottom:78px;z-index:20;background:rgba(15,16,32,.82);border:1px solid var(--line);border-radius:16px;padding:8px;backdrop-filter:blur(10px);margin-top:10px}
+    @media (min-width:760px){.heroActions{grid-template-columns:repeat(3,1fr)}.teamSlots{grid-template-columns:repeat(2,1fr)}.slotInputs{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1fr auto auto}.formGrid{grid-template-columns:1.2fr 1fr 1fr 1fr}.quickInputs{grid-template-columns:1fr 1fr auto}.hero h2{font-size:30px}}
+
     @media (min-width:760px){h1{font-size:22px}.bottomNav{max-width:980px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}}
   </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <h1>Pokémon Champions Manager <span class="muted">v1.0 Meta Build Advisor</span></h1>
-    <div class="sub">One-file · Meta Build Advisor · Singolo/Doppio · import/export JSON · dati personali locali</div>
+    <h1>Pokémon Champions Manager <span class="muted">v1.1 IA Ready Manager</span></h1>
+    <div class="sub">Archivio tecnico · gestione rapida · Singolo/Doppio · export prompt IA · dati locali</div>
     <nav class="tabsTop" id="tabsTop"></nav>
   </div>
 </header>
 
 <main class="wrap">
   <section id="home" class="active">
-    <div class="grid">
-      <div class="card"><h2>PV disponibili</h2><div class="big" id="pvView">—</div><div class="muted">Risorsa condivisa per allenamenti e ingaggi</div></div>
-      <div class="card"><h2>Rosa</h2><div class="big" id="ownedCount">—</div><div class="muted">Pokémon registrati come posseduti</div></div>
-      <div class="card"><h2>Oggetti</h2><div class="big" id="itemCount">—</div><div class="muted">Strumenti/Megapietre disponibili</div></div>
-    </div>
-    <div class="card">
-      <h2>Azioni rapide</h2>
-      <div class="row">
-        <button onclick="optimize('current')">Ottimizza con risorse attuali</button>
-        <button onclick="optimize('theory')" class="secondary">Team teorico con ingaggi</button>
-        <button onclick="go('dati')" class="good">Import/Export JSON</button>
+    <div class="hero">
+      <h2>Centro controllo squadra</h2>
+      <div class="muted">Aggiorna al volo PV, team, formato e poi esporta tutto per una IA senza riscrivere ogni dettaglio.</div>
+      <div class="statTiles">
+        <div class="statTile"><b id="pvView">—</b><span>PV disponibili</span></div>
+        <div class="statTile"><b id="ownedCount">—</b><span>Pokémon nel box</span></div>
+        <div class="statTile"><b id="itemCount">—</b><span>Oggetti</span></div>
       </div>
-      <div id="quickResult" class="notice">Pronto. Usa i tasti in alto o in basso per cambiare sezione.</div>
+      <div class="heroActions">
+        <button onclick="go('team'); setFormatTab('singles'); renderAdvisor(true)">🎯 Consiglio Singolo</button>
+        <button onclick="go('team'); setFormatTab('doubles'); renderAdvisor(true)" class="secondary">👥 Consiglio Doppio</button>
+        <button onclick="exportAiPrompt()" class="good">🤖 Esporta per IA</button>
+      </div>
     </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="sectionTitle"><h2>Gestione rapida</h2><span class="tag">meno passaggi</span></div>
+        <div class="quickInputs">
+          <div><label>PV attuali</label><input id="quickPv" type="number" inputmode="numeric" placeholder="PV"></div>
+          <div><label>Formato di lavoro</label><select id="quickFormat" onchange="setFormatTab(this.value)"><option value="singles">Singolo 3v3</option><option value="doubles">Doppio</option></select></div>
+          <button onclick="saveQuickState()" class="good">Salva</button>
+        </div>
+        <div id="quickResult" class="notice">Pronto. Aggiorna dati, genera consiglio o esporta per IA.</div>
+      </div>
+      <div class="card">
+        <div class="sectionTitle"><h2>Azioni veloci</h2><span class="tag">v1.1</span></div>
+        <div class="row">
+          <button onclick="optimize('current')">Ottimizza team</button>
+          <button onclick="go('rosa')" class="secondary">Modifica box</button>
+          <button onclick="go('dati')" class="secondary">Dati / JSON</button>
+        </div>
+        <p class="muted">L’app ora fa da taccuino tecnico: i consigli seri passano dall’export IA.</p>
+      </div>
+    </div>
+
     <div class="card">
-      <h2>Squadra attuale</h2>
-      <div id="currentTeamPills"></div>
+      <div class="sectionTitle"><h2>Squadra attuale</h2><span class="tag">6 slot modificabili</span></div>
+      <div id="teamManager"></div>
+      <div class="stickyActions"><div class="row"><button onclick="saveCurrentTeamFromSlots()" class="good">Salva squadra</button><button onclick="fillTeamFromAdvisor()" class="secondary">Usa team advisor</button></div></div>
     </div>
   </section>
 
@@ -142,13 +201,33 @@
 
   <section id="rosa">
     <div class="card">
-      <h2>Rosa / Box</h2>
+      <div class="sectionTitle"><h2>Rosa / Box</h2><span class="tag">schede + ricerca</span></div>
+      <div class="toolbar">
+        <input id="rosterSearch" placeholder="Cerca Pokémon, tipo, ruolo, mossa..." oninput="render()">
+        <button onclick="showAllRosterCards()" class="secondary">Mostra tutti</button>
+        <button onclick="go('dati')">Export</button>
+      </div>
       <div id="rosterList"></div>
     </div>
     <div class="card">
-      <h2>Aggiungi Pokémon rapido</h2>
-      <input id="newPokemonName" placeholder="Nome Pokémon, es. Incineroar">
-      <button onclick="addPokemon()">Aggiungi alla rosa</button>
+      <div class="sectionTitle"><h2>Aggiungi / aggiorna Pokémon</h2><span class="tag">rapido</span></div>
+      <div class="formGrid">
+        <input id="newPokemonName" placeholder="Nome Pokémon, es. Incineroar">
+        <input id="newPokemonRole" placeholder="Ruolo, es. bulky support">
+        <input id="newPokemonScore" type="number" min="1" max="100" placeholder="Score">
+        <input id="newPokemonItem" placeholder="Oggetto assegnato">
+      </div>
+      <div class="formGrid" style="margin-top:8px">
+        <input id="newPokemonNature" placeholder="Natura attuale">
+        <input id="newPokemonAbility" placeholder="Abilità">
+        <input id="newPokemonTypes" placeholder="Tipi, es. Lotta, Spettro">
+        <input id="newPokemonMoves" placeholder="Mosse separate da virgola">
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button onclick="addOrUpdatePokemonQuick()" class="good">Salva Pokémon</button>
+        <button onclick="clearPokemonForm()" class="secondary">Pulisci</button>
+      </div>
+      <p class="muted">Se il nome esiste già, aggiorna la scheda invece di creare un doppione.</p>
     </div>
   </section>
 
@@ -190,6 +269,15 @@
       </div>
     </div>
     <div class="card">
+      <div class="sectionTitle"><h2>Export per IA</h2><span class="tag">prompt pronto</span></div>
+      <p class="muted">Genera un testo già ordinato da incollare a ChatGPT, Claude o Gemini. Niente API dentro l’app.</p>
+      <div class="row">
+        <button onclick="exportAiPrompt()" class="good">Genera prompt IA</button>
+        <button onclick="copyAiPrompt()" class="secondary">Copia prompt</button>
+      </div>
+      <textarea id="aiPromptBox" class="aiBox" placeholder="Qui comparirà il prompt per IA..."></textarea>
+    </div>
+    <div class="card">
       <h2>Diagnostica cache</h2>
       <button onclick="killOldServiceWorkers()" class="danger">Rimuovi vecchi service worker/cache</button>
       <div id="cacheStatus" class="muted">Questa v0.8 prova anche a disattivare i vecchi service worker delle versioni precedenti.</div>
@@ -201,9 +289,9 @@
 
 
 <script>
-const VERSION = "v1.0-meta-build-advisor";
-const STORE_KEY = "pkmn_champions_manager_v10";
-const OLD_STORE_KEYS = ["pkmn_champions_manager_v09","pkmn_champions_manager_v08"];
+const VERSION = "v1.1-ia-ready-manager";
+const STORE_KEY = "pkmn_champions_manager_v11";
+const OLD_STORE_KEYS = ["pkmn_champions_manager_v10","pkmn_champions_manager_v09","pkmn_champions_manager_v08"];
 
 const emptyBuild = () => ({
   item:"",
@@ -504,8 +592,11 @@ function render(){
   document.getElementById("ownedCount").textContent = state.roster.filter(p=>p.owned!==false).length;
   document.getElementById("itemCount").textContent = state.items.length;
   document.getElementById("currentTeamPills").innerHTML = state.currentTeam.map(n => `<span class="pill good">${esc(n)}${state.assignedItems[n] ? " · " + esc(state.assignedItems[n]) : ""}</span>`).join("");
-  document.getElementById("rosterList").innerHTML = renderRoster();
+  const rosterEl = document.getElementById("rosterList");
+  if (rosterEl) rosterEl.innerHTML = renderRosterCards();
   document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${esc(x)}</span>`).join("");
+  renderTeamManager();
+  setQuickControls();
   document.getElementById("recruitsList").innerHTML = renderRecruits();
   const active = document.getElementById("team")?.classList.contains("active");
   if (active){ renderBattleBuilder(); renderAdvisor(false); }
@@ -779,6 +870,155 @@ function applyAdvisorToDraft(){
   alert("Consiglio copiato nel builder. Salvalo se ti convince.");
 }
 
+
+function setQuickControls(){
+  const pv = document.getElementById("quickPv");
+  if (pv && document.activeElement !== pv) pv.value = Number(state.pv||0);
+  const fmt = document.getElementById("quickFormat");
+  if (fmt) fmt.value = activeFormatTab;
+}
+function saveQuickState(){
+  const pv = document.getElementById("quickPv");
+  if (pv) state.pv = Number(pv.value || 0);
+  const fmt = document.getElementById("quickFormat");
+  if (fmt) activeFormatTab = fmt.value;
+  saveData();
+  document.getElementById("quickResult").innerHTML = "Dati rapidi salvati. Formato attivo: <b>" + (activeFormatTab === "singles" ? "Singolo 3v3" : "Doppio") + "</b>.";
+}
+function rosterOptions(selected=""){
+  return ownedPool().map(p => `<option value="${esc(p.name)}" ${p.name===selected?"selected":""}>${esc(p.name)}</option>`).join("");
+}
+function itemOptions(selected=""){
+  const all = ["", ...state.items];
+  return all.map(x => `<option value="${esc(x)}" ${x===selected?"selected":""}>${esc(x || "Nessuno")}</option>`).join("");
+}
+function renderTeamManager(){
+  const el = document.getElementById("teamManager");
+  if (!el) return;
+  const team = [...(state.currentTeam || [])];
+  while(team.length < 6) team.push(ownedPool()[team.length]?.name || "");
+  el.innerHTML = `<div class="teamSlots">${team.slice(0,6).map((name,i)=>`<div class="teamSlot">
+    <div class="slotNo">${i+1}</div>
+    <div class="slotInputs">
+      <select id="teamSlot_${i}" onchange="previewSlotItem(${i})"><option value="">Slot vuoto</option>${rosterOptions(name)}</select>
+      <select id="teamItem_${i}">${itemOptions(state.assignedItems[name] || "")}</select>
+    </div>
+  </div>`).join("")}</div>`;
+}
+function previewSlotItem(i){
+  const pkmn = document.getElementById(`teamSlot_${i}`)?.value || "";
+  const item = document.getElementById(`teamItem_${i}`);
+  if (item) item.value = state.assignedItems[pkmn] || "";
+}
+function saveCurrentTeamFromSlots(){
+  const next = [];
+  for (let i=0;i<6;i++){
+    const n = document.getElementById(`teamSlot_${i}`)?.value || "";
+    const item = document.getElementById(`teamItem_${i}`)?.value || "";
+    if (n && !next.includes(n)){
+      next.push(n);
+      state.assignedItems[n] = item;
+    }
+  }
+  if (next.length !== 6){ alert("Servono 6 Pokémon diversi per salvare la squadra principale."); return; }
+  state.currentTeam = next;
+  saveData();
+  alert("Squadra aggiornata.");
+}
+function fillTeamFromAdvisor(){
+  const rec = advisorRecommendation(activeFormatTab);
+  state.currentTeam = [...rec.team6].slice(0,6);
+  saveData();
+  alert("Team advisor copiato nella squadra attuale. Controlla gli oggetti prima di giocare.");
+}
+let rosterExpanded = false;
+function showAllRosterCards(){ rosterExpanded = !rosterExpanded; render(); }
+function renderRosterCards(){
+  const q = (document.getElementById("rosterSearch")?.value || "").toLowerCase().trim();
+  let list = ownedPool();
+  if (q){
+    list = list.filter(p => [p.name,p.role,p.ability,p.currentNature,(p.types||[]).join(" "),(p.currentMoves||[]).join(" ")].join(" ").toLowerCase().includes(q));
+  }
+  if (!q && !rosterExpanded) list = list.slice(0,8);
+  return `<div class="pokeCards">${list.map(p=>{
+    const item = state.assignedItems[p.name] || "—";
+    return `<div class="pokeCard">
+      <div class="pokeTop"><div><b>${esc(p.name)}</b><div>${(p.types||[]).map(t=>`<span class="typeChip">${esc(t)}</span>`).join("")}</div></div><span class="scoreBadge">${esc(fmtScore(p, activeFormatTab))}</span></div>
+      <div class="moveLine"><b>Ruolo:</b> ${esc(p.role || "Da classificare")}</div>
+      <div class="moveLine"><b>Oggetto:</b> ${esc(item)} · <b>Natura:</b> ${esc(p.currentNature || "—")} · <b>Abilità:</b> ${esc(p.ability || "—")}</div>
+      <div class="moveLine"><b>Mosse:</b> ${(p.currentMoves||[]).length ? (p.currentMoves||[]).map(esc).join(" · ") : "—"}</div>
+      <div class="row" style="margin-top:8px"><button class="secondary" onclick="loadPokemonIntoForm('${esc(p.name)}')">Modifica</button><button class="secondary" onclick="addPokemonToTeam('${esc(p.name)}')">Nel team</button></div>
+    </div>`;
+  }).join("")}</div>${!q && ownedPool().length>8 ? `<div class="notice">Mostrati ${list.length}/${ownedPool().length}. Usa ricerca o “Mostra tutti”.</div>` : ""}`;
+}
+function loadPokemonIntoForm(name){
+  const p = getP(name);
+  document.getElementById("newPokemonName").value = p.name || "";
+  document.getElementById("newPokemonRole").value = p.role || "";
+  document.getElementById("newPokemonScore").value = p.score || "";
+  document.getElementById("newPokemonItem").value = state.assignedItems[p.name] || "";
+  document.getElementById("newPokemonNature").value = p.currentNature || "";
+  document.getElementById("newPokemonAbility").value = p.ability || "";
+  document.getElementById("newPokemonTypes").value = (p.types||[]).join(", ");
+  document.getElementById("newPokemonMoves").value = (p.currentMoves||[]).join(", ");
+  window.scrollTo({top:document.body.scrollHeight, behavior:"smooth"});
+}
+function clearPokemonForm(){["newPokemonName","newPokemonRole","newPokemonScore","newPokemonItem","newPokemonNature","newPokemonAbility","newPokemonTypes","newPokemonMoves"].forEach(id=>{const el=document.getElementById(id); if(el) el.value="";});}
+function addOrUpdatePokemonQuick(){
+  const name = document.getElementById("newPokemonName").value.trim();
+  if (!name) return alert("Inserisci il nome Pokémon.");
+  let p = state.roster.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if (!p){ p = normalizePokemon({name, owned:true}); state.roster.push(p); }
+  p.role = document.getElementById("newPokemonRole").value.trim() || p.role || "Da classificare";
+  p.score = Number(document.getElementById("newPokemonScore").value || p.score || 65);
+  p.currentNature = document.getElementById("newPokemonNature").value.trim() || p.currentNature || "";
+  p.ability = document.getElementById("newPokemonAbility").value.trim() || p.ability || "";
+  p.types = document.getElementById("newPokemonTypes").value.split(",").map(x=>x.trim()).filter(Boolean);
+  p.currentMoves = document.getElementById("newPokemonMoves").value.split(",").map(x=>x.trim()).filter(Boolean);
+  const item = document.getElementById("newPokemonItem").value.trim();
+  if (item){ state.assignedItems[p.name] = item; if (!state.items.some(x=>x.toLowerCase()===item.toLowerCase())) state.items.push(item); }
+  saveData();
+  clearPokemonForm();
+  alert("Pokémon salvato/aggiornato.");
+}
+function addPokemonToTeam(name){
+  state.currentTeam = state.currentTeam.filter(x => x !== name);
+  state.currentTeam.unshift(name);
+  state.currentTeam = state.currentTeam.slice(0,6);
+  saveData();
+}
+function buildAiPromptText(){
+  state = normalizeImported(state);
+  const rec = advisorRecommendation(activeFormatTab);
+  const payload = {
+    richiesta:"Analizza il mio account Pokémon Champions e dammi consigli mirati. Distingui Singolo 3v3 e Doppio, non mischiare i meta. Restituisci anche JSON reimportabile se proponi modifiche.",
+    formatoAttivo: activeFormatTab === "singles" ? "Singolo 3v3" : "Doppio",
+    pv: state.pv,
+    squadraAttuale: state.currentTeam,
+    oggettiAssegnati: state.assignedItems,
+    oggettiDisponibili: state.items,
+    box: state.roster.map(p=>({name:p.name, role:p.role, score:p.score, types:p.types, ability:p.ability, nature:p.currentNature, moves:p.currentMoves, stats:p.statsSeen, builds:p.builds})),
+    pianiSalvati: state.battlePlans,
+    consiglioLocale: rec
+  };
+  return `Analizza questo export del Pokémon Champions Manager.\n\nVoglio una risposta pratica con:\n- miglior team da 6 con risorse attuali\n- miglior trio Singolo 3v3\n- miglior piano Doppio\n- build consigliata per ogni Pokémon rilevante\n- natura, statistiche, strumento e moveset\n- priorità PV\n- cosa cambiare subito\n- eventuale JSON reimportabile nell'app\n\nDATI:\n${JSON.stringify(payload,null,2)}`;
+}
+function exportAiPrompt(){
+  const txt = buildAiPromptText();
+  const box = document.getElementById("aiPromptBox") || document.getElementById("jsonBox");
+  if (box) box.value = txt;
+  try{ navigator.clipboard.writeText(txt); }catch(e){}
+  go("dati");
+  statusMsg("Prompt IA generato. Incollalo qui o in un'altra IA per consigli mirati.");
+}
+async function copyAiPrompt(){
+  const box = document.getElementById("aiPromptBox");
+  const txt = box?.value || buildAiPromptText();
+  if (box) box.value = txt;
+  try{ await navigator.clipboard.writeText(txt); statusMsg("Prompt IA copiato negli appunti."); }
+  catch(e){ statusMsg("Prompt mostrato nel riquadro: copia manualmente.", true); }
+}
+
 function optimize(mode){
   let pool = state.roster.filter(p=>p.owned!==false).map(p=>({...p, source:"box", netScore:fmtScore(p, activeFormatTab)}));
   let budget = Number(state.pv||0);
@@ -828,7 +1068,7 @@ function importFromFile(){
       state = normalizeImported(JSON.parse(reader.result));
       saveData();
       document.getElementById("jsonFile").value = "";
-      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v1.0.`);
+      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v1.1.`);
       go("home");
     }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
   };
@@ -840,7 +1080,7 @@ function importFromText(){
     if (!txt){ statusMsg("Incolla prima un JSON.", true); return; }
     state = normalizeImported(JSON.parse(txt));
     saveData();
-    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v1.0.`);
+    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v1.1.`);
     go("home");
   }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
 }
@@ -851,10 +1091,10 @@ function exportJson(){
   const blob = new Blob([txt], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = "champions-manager-dati-export-v10.json";
+  a.href = url; a.download = "champions-manager-dati-export-v11.json";
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  statusMsg("Export v1.0 generato con advisor build, mosse, nature, statistiche e dati Singolo/Doppio.");
+  statusMsg("Export v1.1 generato con gestione rapida, build, prompt IA e dati Singolo/Doppio.");
   go("dati");
 }
 async function copyJson(){
@@ -865,7 +1105,7 @@ async function copyJson(){
   catch(e){ statusMsg("JSON mostrato nel riquadro: copia manualmente.", true); }
 }
 function resetData(){
-  if (!confirm("Resetto i dati locali v1.0 e torno ai dati iniziali?")) return;
+  if (!confirm("Resetto i dati locali v1.1 e torno ai dati iniziali?")) return;
   state = normalizeImported(deepClone(defaultData));
   saveData();
   statusMsg("Reset completato.");

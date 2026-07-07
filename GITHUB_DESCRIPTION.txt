@@ -1,0 +1,1 @@
+Web app/PWA mobile-first per gestire box, PV, oggetti, team Singolo/Doppio e build di Pokémon Champions, con export JSON/prompt per analisi IA esterne.

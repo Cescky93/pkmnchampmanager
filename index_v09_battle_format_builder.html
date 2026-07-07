@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#7c3aed">
+  <title>Pokémon Champions Manager v0.9</title>
+  <style>
+    :root{
+      --bg:#0f1020;--card:#1a1b33;--card2:#23244a;--txt:#f6f7fb;--muted:#b8bad3;
+      --accent:#a3e635;--accent2:#7c3aed;--danger:#ef4444;--ok:#22c55e;--line:#34365f;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#14162e,#0d0e1d);color:var(--txt);padding-bottom:86px}
+    header{position:sticky;top:0;z-index:10;background:rgba(15,16,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px}
+    h1{font-size:18px;margin:0 0 4px}
+    .sub{font-size:12px;color:var(--muted)}
+    .wrap{max-width:980px;margin:0 auto;padding:12px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 10px 22px rgba(0,0,0,.18)}
+    .card h2{font-size:17px;margin:0 0 10px}
+    .pill{display:inline-flex;gap:6px;align-items:center;background:var(--card2);border:1px solid var(--line);padding:7px 10px;border-radius:999px;margin:4px 4px 4px 0;font-size:13px}
+    .pill.good{border-color:rgba(163,230,53,.55)}
+    .pill.warn{border-color:rgba(245,158,11,.65)}
+    .big{font-size:30px;font-weight:800;color:var(--accent)}
+    button,.btn,input,textarea,select{font:inherit}
+    button,.btn{border:0;border-radius:12px;padding:11px 12px;background:var(--accent2);color:white;font-weight:700;cursor:pointer}
+    button.secondary{background:var(--card2);border:1px solid var(--line)}
+    button.good{background:#16a34a}
+    button.danger{background:#dc2626}
+    input,textarea,select{width:100%;background:#111327;color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:11px;margin:6px 0 10px}
+    textarea{min-height:180px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+    .tabsTop{display:flex;gap:8px;overflow:auto;padding-top:10px}
+    .tabBtn{white-space:nowrap;background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:9px 12px}
+    .tabBtn.active{background:var(--accent);color:#111827}
+    .bottomNav{position:fixed;bottom:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;background:rgba(15,16,32,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom))}
+    .bottomNav a{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:12px;background:var(--card2);color:var(--txt);text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--line)}
+    .bottomNav a.active{background:var(--accent);color:#111827}
+    section{display:none}
+    section.active{display:block}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .muted{color:var(--muted)}
+    .notice{padding:10px 12px;border-radius:12px;background:#13251a;border:1px solid rgba(34,197,94,.45);margin:10px 0}
+    .dangerBox{padding:10px 12px;border-radius:12px;background:#2b1414;border:1px solid rgba(239,68,68,.45);margin:10px 0}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{color:var(--muted);font-weight:700}
+
+    .formatTabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .formatTabs button{background:var(--card2);border:1px solid var(--line);color:var(--txt)}
+    .formatTabs button.active{background:var(--accent);color:#111827}
+    .selectGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:10px 0}
+    .selectCard{background:#111327;border:1px solid var(--line);border-radius:14px;padding:10px;min-height:70px}
+    .selectCard.selected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(163,230,53,.15)}
+    .selectCard.lead{outline:2px solid var(--ok)}
+    .selectCard small{display:block;color:var(--muted);margin-top:4px}
+    .savedBox{background:#111327;border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0}
+    .tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:3px 7px;margin:2px;background:var(--card2);color:var(--muted)}
+    .twoCols{display:grid;grid-template-columns:1fr;gap:12px}
+    @media (min-width:760px){.twoCols{grid-template-columns:1fr 1fr}}
+
+    @media (min-width:760px){h1{font-size:22px}.bottomNav{max-width:980px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Pokémon Champions Manager <span class="muted">v0.9 Battle Format Builder</span></h1>
+    <div class="sub">One-file · Battle Format Builder · import/export JSON · dati personali locali</div>
+    <nav class="tabsTop" id="tabsTop"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="home" class="active">
+    <div class="grid">
+      <div class="card"><h2>PV disponibili</h2><div class="big" id="pvView">—</div><div class="muted">Risorsa condivisa per allenamenti e ingaggi</div></div>
+      <div class="card"><h2>Rosa</h2><div class="big" id="ownedCount">—</div><div class="muted">Pokémon registrati come posseduti</div></div>
+      <div class="card"><h2>Oggetti</h2><div class="big" id="itemCount">—</div><div class="muted">Strumenti/Megapietre disponibili</div></div>
+    </div>
+    <div class="card">
+      <h2>Azioni rapide</h2>
+      <div class="row">
+        <button onclick="optimize('current')">Ottimizza con risorse attuali</button>
+        <button onclick="optimize('theory')" class="secondary">Team teorico con ingaggi</button>
+        <button onclick="go('dati')" class="good">Import/Export JSON</button>
+      </div>
+      <div id="quickResult" class="notice">Pronto. Usa i tasti in alto o in basso per cambiare sezione.</div>
+    </div>
+    <div class="card">
+      <h2>Squadra attuale</h2>
+      <div id="currentTeamPills"></div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="card">
+      <h2>Team consigliato</h2>
+      <p class="muted">Prima stima euristica basata su ruoli, oggetti, mega, copertura e risorse.</p>
+      <div class="row">
+        <button onclick="optimize('current')">Solo ciò che ho</button>
+        <button onclick="optimize('theory')" class="secondary">Teorico con ingaggi</button>
+      </div>
+      <div id="teamResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>Battle Format Builder</h2>
+      <p class="muted">Da una squadra base di 6 Pokémon crea varianti per Singolo 3v3 e piani per Doppio.</p>
+      <div class="formatTabs">
+        <button id="fmtSinglesBtn" class="active" onclick="setFormatTab('singles')">Singolo 3v3</button>
+        <button id="fmtDoublesBtn" onclick="setFormatTab('doubles')">Doppio</button>
+      </div>
+      <div id="battleBuilder"></div>
+    </div>
+  </section>
+
+  <section id="rosa">
+    <div class="card">
+      <h2>Rosa / Box</h2>
+      <div id="rosterList"></div>
+    </div>
+    <div class="card">
+      <h2>Aggiungi Pokémon rapido</h2>
+      <input id="newPokemonName" placeholder="Nome Pokémon, es. Incineroar">
+      <button onclick="addPokemon()">Aggiungi alla rosa</button>
+    </div>
+  </section>
+
+  <section id="oggetti">
+    <div class="card">
+      <h2>Oggetti disponibili</h2>
+      <div id="itemsList"></div>
+    </div>
+    <div class="card">
+      <h2>Aggiungi oggetto rapido</h2>
+      <input id="newItemName" placeholder="Nome oggetto, es. Focalnastro">
+      <button onclick="addItem()">Aggiungi oggetto</button>
+    </div>
+  </section>
+
+  <section id="ingaggi">
+    <div class="card">
+      <h2>Candidati ingaggio</h2>
+      <p class="muted">Costi e disponibilità sono placeholder da aggiornare quando mi mostri pascolo/Home.</p>
+      <div id="recruitsList"></div>
+    </div>
+  </section>
+
+  <section id="dati">
+    <div class="card">
+      <h2>Import / Export dati</h2>
+      <p class="muted">Carica il JSON che ti preparo io, oppure esporta quello aggiornato e rimandamelo.</p>
+      <input type="file" id="jsonFile" accept=".json,application/json">
+      <div class="row">
+        <button onclick="importFromFile()">Importa file JSON</button>
+        <button onclick="exportJson()" class="secondary">Esporta JSON</button>
+        <button onclick="resetData()" class="danger">Reset dati v0.9</button>
+      </div>
+      <div id="importStatus" class="notice">Nessun import eseguito in questa sessione.</div>
+      <textarea id="jsonBox" placeholder="Qui puoi incollare o vedere il JSON..."></textarea>
+      <div class="row">
+        <button onclick="importFromText()">Applica JSON incollato</button>
+        <button onclick="copyJson()" class="secondary">Copia JSON attuale</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Diagnostica cache</h2>
+      <button onclick="killOldServiceWorkers()" class="danger">Rimuovi vecchi service worker/cache</button>
+      <div id="cacheStatus" class="muted">Questa v0.8 prova anche a disattivare i vecchi service worker delle versioni precedenti.</div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottomNav" id="bottomNav"></nav>
+
+
+<script>
+const VERSION = "v0.9-battle-format-builder";
+const STORE_KEY = "pkmn_champions_manager_v09";
+const OLD_STORE_KEYS = ["pkmn_champions_manager_v08"];
+
+const emptyBuild = () => ({
+  item:"",
+  ability:"",
+  nature:"",
+  evs:"",
+  ivs:"",
+  moves:[],
+  roles:[],
+  notes:""
+});
+
+const defaultData = {
+  version: VERSION,
+  pv: 8366,
+  currentTeam: ["Lucario","Spiritomb","Sylveon","Dragonite","Snorlax","Raichu"],
+  assignedItems: {
+    "Lucario":"Lucarite",
+    "Spiritomb":"Baccacedro",
+    "Sylveon":"Rapidartiglio",
+    "Dragonite":"Dragonitite",
+    "Snorlax":"Avanzi",
+    "Raichu":"Raichuite Y"
+  },
+  battlePlans: {
+    singlesSelections: [],
+    doublesPlans: []
+  },
+  roster: [
+    {name:"Gourgeist", owned:true, role:"Bulky fisico / Spettro-Erba", score:67},
+    {name:"Gardevoir", owned:true, role:"Attaccante speciale / Folletto-Psico", score:76},
+    {name:"Rotom Forma Vortice", owned:true, role:"Speciale bulky / Elettro-Volante", score:78},
+    {name:"Zoroark Forma di Hisui", owned:true, role:"Attaccante speciale veloce", score:82},
+    {name:"Blaziken", owned:true, role:"Attaccante fisico", score:77},
+    {name:"Staraptor", owned:true, role:"Fisico offensivo", score:69},
+    {name:"Raichu", owned:true, role:"Supporto/Elettro veloce", score:70},
+    {name:"Chesnaught", owned:true, role:"Fisico difensivo", score:72},
+    {name:"Snorlax", owned:true, role:"Bulky fisico lento", score:80},
+    {name:"Kommo-o", owned:true, role:"Drago/Lotta bulky", score:79},
+    {name:"Spiritomb", owned:true, role:"Distortozona / speciale bulky", score:74},
+    {name:"Decidueye", owned:true, role:"Fisico Erba/Spettro", score:68},
+    {name:"Machamp", owned:true, role:"Fisico lento", score:70},
+    {name:"Dragonite", owned:true, role:"Mega / attaccante misto", score:84},
+    {name:"Sylveon", owned:true, role:"Speciale Folletto", score:81},
+    {name:"Froslass", owned:true, role:"Veloce fragile / utility", score:71},
+    {name:"Lucario", owned:true, role:"Mega / setup speciale", score:83},
+    {name:"Gyarados", owned:true, role:"Fisico con Dragodanza", score:85},
+    {name:"Victreebel", owned:true, role:"Erba/Veleno utility", score:62}
+  ],
+  items: ["Erbachiara","Stolascelta","Miracolseme","Bandana","Focalnastro","Avanzi","Baccaprugna","Baccacedro","Raichuite X","Raichuite Y","Dragonitite","Lucarite","Chesnaughtite","Luminpolvere","Rapidartiglio","Roccia di re"],
+  recruits: [
+    {name:"Incineroar", cost:3000, score:92, note:"Supporto fisico, pivot, ottima utilità teorica"},
+    {name:"Amoonguss", cost:2800, score:90, note:"Supporto, controllo ritmo, ottimo in team bulky"},
+    {name:"Flutter Mane", cost:4000, score:94, note:"Attaccante speciale velocissimo se disponibile"},
+    {name:"Ursaluna", cost:3500, score:89, note:"Abusatore Distortozona con pressione fisica"},
+    {name:"Tornadus", cost:3800, score:91, note:"Speed control offensivo se disponibile"}
+  ],
+  notes: "Dati iniziali ricavati da video/screenshot: Squadra 1, box 19/30, oggetti e 8.366 PV."
+};
+
+let state = loadData();
+let activeFormatTab = "singles";
+let draftSingles = {selected:[], lead:"", name:"Default 3v3", notes:""};
+let draftDoubles = {leadPair:[], backups:[], name:"Lead principale", notes:""};
+
+const tabs = [
+  ["home","Home"],["team","Team"],["rosa","Rosa"],["oggetti","Oggetti"],["ingaggi","Ingaggi"],["dati","Dati"]
+];
+
+function deepClone(x){return JSON.parse(JSON.stringify(x));}
+function makeId(prefix){return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7);}
+function esc(s){return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+function loadData(){
+  try {
+    const current = localStorage.getItem(STORE_KEY);
+    if (current) return normalizeImported(JSON.parse(current));
+    for (const key of OLD_STORE_KEYS){
+      const old = localStorage.getItem(key);
+      if (old) return normalizeImported(JSON.parse(old));
+    }
+    return normalizeImported(deepClone(defaultData));
+  }
+  catch(e){ return normalizeImported(deepClone(defaultData)); }
+}
+function saveData(){
+  state.version = VERSION;
+  state = normalizeImported(state);
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  render();
+}
+function normalizePokemon(p){
+  const out = typeof p === "string" ? ({name:p, owned:true, role:"Da classificare", score:65}) : {...p};
+  out.name = out.name || "Senza nome";
+  out.owned = out.owned !== false;
+  out.score = Number(out.score || 65);
+  out.role = out.role || "Da classificare";
+  out.builds = out.builds || {};
+  out.builds.singles = {...emptyBuild(), ...(out.builds.singles || {})};
+  out.builds.doubles = {...emptyBuild(), ...(out.builds.doubles || {})};
+  return out;
+}
+function normalizeImported(obj){
+  const d = deepClone(defaultData);
+  const out = {...d, ...(obj || {})};
+  if (obj && obj.pvDisponibili && !obj.pv) out.pv = obj.pvDisponibili;
+  if (obj && obj.squadraAttuale && !obj.currentTeam) out.currentTeam = obj.squadraAttuale;
+  if (obj && Array.isArray(obj.boxAttuale) && !obj.roster) out.roster = obj.boxAttuale.map(normalizePokemon);
+  if (obj && Array.isArray(obj.oggettiDisponibili) && !obj.items) out.items = obj.oggettiDisponibili;
+  if (obj && obj.oggettiAssegnati && !obj.assignedItems) out.assignedItems = obj.oggettiAssegnati;
+
+  out.roster = Array.isArray(out.roster) ? out.roster.map(normalizePokemon) : d.roster.map(normalizePokemon);
+  out.items = Array.isArray(out.items) ? out.items : d.items;
+  out.currentTeam = Array.isArray(out.currentTeam) ? out.currentTeam : d.currentTeam;
+  out.recruits = Array.isArray(out.recruits) ? out.recruits : d.recruits;
+  out.assignedItems = out.assignedItems || {};
+  out.pv = Number(out.pv || 0);
+
+  out.battlePlans = out.battlePlans || {};
+  out.battlePlans.singlesSelections = Array.isArray(out.battlePlans.singlesSelections) ? out.battlePlans.singlesSelections : (Array.isArray(out.singlesSelections) ? out.singlesSelections : []);
+  out.battlePlans.doublesPlans = Array.isArray(out.battlePlans.doublesPlans) ? out.battlePlans.doublesPlans : (Array.isArray(out.doublesPlans) ? out.doublesPlans : []);
+  out.battlePlans.singlesSelections = out.battlePlans.singlesSelections.map(x => ({
+    id: x.id || makeId("singles"),
+    name: x.name || "Variante 3v3",
+    selectedPokemon: Array.isArray(x.selectedPokemon) ? x.selectedPokemon.slice(0,3) : [],
+    lead: x.lead || "",
+    notes: x.notes || ""
+  }));
+  out.battlePlans.doublesPlans = out.battlePlans.doublesPlans.map(x => ({
+    id: x.id || makeId("doubles"),
+    name: x.name || "Piano Doppio",
+    leadPair: Array.isArray(x.leadPair) ? x.leadPair.slice(0,2) : [],
+    backups: Array.isArray(x.backups) ? x.backups : [],
+    notes: x.notes || ""
+  }));
+  out.version = VERSION;
+  return out;
+}
+
+function go(id){
+  location.hash = id;
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === id));
+  document.querySelectorAll("[data-tab]").forEach(a => a.classList.toggle("active", a.dataset.tab === id));
+  if (id === "team") renderBattleBuilder();
+}
+function initNav(){
+  const top = document.getElementById("tabsTop");
+  const bottom = document.getElementById("bottomNav");
+  top.innerHTML = "";
+  bottom.innerHTML = "";
+  for (const [id,label] of tabs){
+    const b = document.createElement("button");
+    b.className = "tabBtn";
+    b.dataset.tab = id;
+    b.textContent = label;
+    b.onclick = () => go(id);
+    top.appendChild(b);
+
+    const a = document.createElement("a");
+    a.href = "#" + id;
+    a.dataset.tab = id;
+    a.textContent = label;
+    a.addEventListener("click", (ev)=>{ ev.preventDefault(); go(id); history.replaceState(null,"","#"+id); });
+    bottom.appendChild(a);
+  }
+}
+window.addEventListener("hashchange", () => go((location.hash||"#home").slice(1)));
+
+function render(){
+  document.getElementById("pvView").textContent = Number(state.pv||0).toLocaleString("it-IT");
+  document.getElementById("ownedCount").textContent = state.roster.filter(p=>p.owned!==false).length;
+  document.getElementById("itemCount").textContent = state.items.length;
+  document.getElementById("currentTeamPills").innerHTML = state.currentTeam.map(n => `<span class="pill good">${esc(n)}${state.assignedItems[n] ? " · " + esc(state.assignedItems[n]) : ""}</span>`).join("");
+  document.getElementById("rosterList").innerHTML = renderRoster();
+  document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${esc(x)}</span>`).join("");
+  document.getElementById("recruitsList").innerHTML = renderRecruits();
+  const active = document.getElementById("team")?.classList.contains("active");
+  if (active) renderBattleBuilder();
+}
+function renderRoster(){
+  const rows = state.roster.map(p => `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.role||"Da classificare")}</td><td>${esc(p.score||65)}</td><td>${esc(state.assignedItems[p.name]||"—")}</td></tr>`).join("");
+  return `<table><thead><tr><th>Pokémon</th><th>Ruolo</th><th>Score</th><th>Oggetto</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function renderRecruits(){
+  const rows = state.recruits.map(p => `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.cost)} PV</td><td>${esc(p.score)}</td><td>${esc(p.note)}</td></tr>`).join("");
+  return `<table><thead><tr><th>Pokémon</th><th>Costo stimato</th><th>Score</th><th>Nota</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function setFormatTab(tab){
+  activeFormatTab = tab;
+  renderBattleBuilder();
+}
+function teamMemberCards(mode){
+  const selected = mode === "singles" ? draftSingles.selected : draftDoubles.leadPair;
+  const backups = draftDoubles.backups;
+  return state.currentTeam.map(name => {
+    const isSelected = selected.includes(name);
+    const isBackup = backups.includes(name);
+    const isLead = mode === "singles" ? draftSingles.lead === name : false;
+    const p = state.roster.find(x => x.name === name) || {};
+    let small = state.assignedItems[name] ? state.assignedItems[name] : "Nessuno strumento";
+    if (mode === "doubles" && isBackup) small += " · backup";
+    return `<div class="selectCard ${isSelected ? "selected" : ""} ${isLead ? "lead" : ""}">
+      <b>${esc(name)}</b>
+      <small>${esc(small)}</small>
+      <small>${esc(p.role || "")}</small>
+      <div class="row" style="margin-top:8px">
+        <button class="secondary" onclick="${mode === "singles" ? `toggleSingles('${esc(name)}')` : `toggleDoubleLead('${esc(name)}')`}">${isSelected ? "Rimuovi" : "Seleziona"}</button>
+        ${mode === "singles" ? `<button class="secondary" onclick="setSinglesLead('${esc(name)}')" ${!draftSingles.selected.includes(name) ? "disabled" : ""}>Lead</button>` : `<button class="secondary" onclick="toggleDoubleBackup('${esc(name)}')">${isBackup ? "No backup" : "Backup"}</button>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+function renderBattleBuilder(){
+  const el = document.getElementById("battleBuilder");
+  if (!el) return;
+  document.getElementById("fmtSinglesBtn").classList.toggle("active", activeFormatTab === "singles");
+  document.getElementById("fmtDoublesBtn").classList.toggle("active", activeFormatTab === "doubles");
+  if (activeFormatTab === "singles") el.innerHTML = renderSinglesBuilder();
+  else el.innerHTML = renderDoublesBuilder();
+}
+function renderSinglesBuilder(){
+  const count = draftSingles.selected.length;
+  const saved = state.battlePlans.singlesSelections.map(x => `<div class="savedBox">
+    <div class="row"><b>${esc(x.name)}</b><span class="tag">${esc(x.selectedPokemon.length)}/3</span><span class="tag">Lead: ${esc(x.lead || "—")}</span></div>
+    <div>${x.selectedPokemon.map(n=>`<span class="pill good">${esc(n)}</span>`).join("")}</div>
+    ${x.notes ? `<div class="muted">${esc(x.notes)}</div>` : ""}
+    <div class="row" style="margin-top:8px"><button class="secondary" onclick="loadSinglesPlan('${x.id}')">Carica</button><button class="danger" onclick="deleteSinglesPlan('${x.id}')">Elimina</button></div>
+  </div>`).join("") || `<div class="muted">Nessuna variante 3v3 salvata.</div>`;
+  return `<div class="notice"><b>Singolo 3v3:</b> scegli esattamente 3 Pokémon dalla squadra da 6. Selezionati: <b>${count}/3</b></div>
+    <div class="selectGrid">${teamMemberCards("singles")}</div>
+    <div class="twoCols">
+      <div>
+        <label>Nome variante</label>
+        <input id="singlesName" value="${esc(draftSingles.name)}" oninput="draftSingles.name=this.value">
+      </div>
+      <div>
+        <label>Lead consigliato</label>
+        <select id="singlesLeadSelect" onchange="draftSingles.lead=this.value">
+          <option value="">Scegli lead tra i 3</option>
+          ${draftSingles.selected.map(n=>`<option value="${esc(n)}" ${draftSingles.lead===n?"selected":""}>${esc(n)}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <label>Note strategiche</label>
+    <textarea id="singlesNotes" style="min-height:90px" oninput="draftSingles.notes=this.value">${esc(draftSingles.notes)}</textarea>
+    <div class="row">
+      <button onclick="saveSinglesPlan()" class="good">Salva variante 3v3</button>
+      <button onclick="clearSinglesDraft()" class="secondary">Pulisci selezione</button>
+    </div>
+    <h3>Varianti salvate</h3>
+    ${saved}`;
+}
+function renderDoublesBuilder(){
+  const count = draftDoubles.leadPair.length;
+  const saved = state.battlePlans.doublesPlans.map(x => `<div class="savedBox">
+    <div class="row"><b>${esc(x.name)}</b><span class="tag">${esc(x.leadPair.length)}/2 lead</span></div>
+    <div><b>Lead:</b> ${x.leadPair.map(n=>`<span class="pill good">${esc(n)}</span>`).join("") || "—"}</div>
+    <div><b>Backup/core:</b> ${x.backups.map(n=>`<span class="pill">${esc(n)}</span>`).join("") || "—"}</div>
+    ${x.notes ? `<div class="muted">${esc(x.notes)}</div>` : ""}
+    <div class="row" style="margin-top:8px"><button class="secondary" onclick="loadDoublesPlan('${x.id}')">Carica</button><button class="danger" onclick="deleteDoublesPlan('${x.id}')">Elimina</button></div>
+  </div>`).join("") || `<div class="muted">Nessun piano Doppio salvato.</div>`;
+  return `<div class="notice"><b>Doppio:</b> scegli esattamente 2 Pokémon come coppia lead. Lead selezionati: <b>${count}/2</b></div>
+    <div class="selectGrid">${teamMemberCards("doubles")}</div>
+    <label>Nome piano</label>
+    <input id="doublesName" value="${esc(draftDoubles.name)}" oninput="draftDoubles.name=this.value">
+    <label>Note strategiche</label>
+    <textarea id="doublesNotes" style="min-height:90px" oninput="draftDoubles.notes=this.value">${esc(draftDoubles.notes)}</textarea>
+    <div class="row">
+      <button onclick="saveDoublesPlan()" class="good">Salva piano Doppio</button>
+      <button onclick="clearDoublesDraft()" class="secondary">Pulisci selezione</button>
+    </div>
+    <h3>Piani salvati</h3>
+    ${saved}`;
+}
+function toggleSingles(name){
+  if (draftSingles.selected.includes(name)){
+    draftSingles.selected = draftSingles.selected.filter(x => x !== name);
+    if (draftSingles.lead === name) draftSingles.lead = "";
+  } else {
+    if (draftSingles.selected.length >= 3){ alert("Nel Singolo 3v3 puoi selezionare esattamente 3 Pokémon."); return; }
+    draftSingles.selected.push(name);
+    if (!draftSingles.lead) draftSingles.lead = name;
+  }
+  renderBattleBuilder();
+}
+function setSinglesLead(name){
+  if (!draftSingles.selected.includes(name)){ alert("Il lead deve essere uno dei 3 selezionati."); return; }
+  draftSingles.lead = name;
+  renderBattleBuilder();
+}
+function saveSinglesPlan(){
+  if (draftSingles.selected.length !== 3){ alert("Devi selezionare esattamente 3 Pokémon."); return; }
+  if (!draftSingles.lead || !draftSingles.selected.includes(draftSingles.lead)){ alert("Scegli un lead tra i 3 selezionati."); return; }
+  state.battlePlans.singlesSelections.push({
+    id: makeId("singles"),
+    name: draftSingles.name.trim() || "Variante 3v3",
+    selectedPokemon: [...draftSingles.selected],
+    lead: draftSingles.lead,
+    notes: draftSingles.notes.trim()
+  });
+  clearSinglesDraft(false);
+  saveData();
+  alert("Variante Singolo 3v3 salvata.");
+}
+function clearSinglesDraft(doRender=true){
+  draftSingles = {selected:[], lead:"", name:"Default 3v3", notes:""};
+  if (doRender) renderBattleBuilder();
+}
+function loadSinglesPlan(id){
+  const x = state.battlePlans.singlesSelections.find(p => p.id === id);
+  if (!x) return;
+  draftSingles = {selected:[...x.selectedPokemon], lead:x.lead, name:x.name, notes:x.notes};
+  renderBattleBuilder();
+}
+function deleteSinglesPlan(id){
+  if (!confirm("Eliminare questa variante 3v3?")) return;
+  state.battlePlans.singlesSelections = state.battlePlans.singlesSelections.filter(p => p.id !== id);
+  saveData();
+}
+
+function toggleDoubleLead(name){
+  if (draftDoubles.leadPair.includes(name)){
+    draftDoubles.leadPair = draftDoubles.leadPair.filter(x => x !== name);
+  } else {
+    if (draftDoubles.leadPair.length >= 2){ alert("Nel Doppio la coppia lead deve contenere esattamente 2 Pokémon."); return; }
+    draftDoubles.leadPair.push(name);
+    draftDoubles.backups = draftDoubles.backups.filter(x => x !== name);
+  }
+  renderBattleBuilder();
+}
+function toggleDoubleBackup(name){
+  if (draftDoubles.leadPair.includes(name)){ alert("Un lead non può essere anche backup nello stesso piano."); return; }
+  if (draftDoubles.backups.includes(name)) draftDoubles.backups = draftDoubles.backups.filter(x => x !== name);
+  else draftDoubles.backups.push(name);
+  renderBattleBuilder();
+}
+function saveDoublesPlan(){
+  if (draftDoubles.leadPair.length !== 2){ alert("Devi scegliere esattamente 2 Pokémon come coppia lead."); return; }
+  state.battlePlans.doublesPlans.push({
+    id: makeId("doubles"),
+    name: draftDoubles.name.trim() || "Piano Doppio",
+    leadPair: [...draftDoubles.leadPair],
+    backups: [...draftDoubles.backups],
+    notes: draftDoubles.notes.trim()
+  });
+  clearDoublesDraft(false);
+  saveData();
+  alert("Piano Doppio salvato.");
+}
+function clearDoublesDraft(doRender=true){
+  draftDoubles = {leadPair:[], backups:[], name:"Lead principale", notes:""};
+  if (doRender) renderBattleBuilder();
+}
+function loadDoublesPlan(id){
+  const x = state.battlePlans.doublesPlans.find(p => p.id === id);
+  if (!x) return;
+  draftDoubles = {leadPair:[...x.leadPair], backups:[...x.backups], name:x.name, notes:x.notes};
+  renderBattleBuilder();
+}
+function deleteDoublesPlan(id){
+  if (!confirm("Eliminare questo piano Doppio?")) return;
+  state.battlePlans.doublesPlans = state.battlePlans.doublesPlans.filter(p => p.id !== id);
+  saveData();
+}
+
+function optimize(mode){
+  let pool = state.roster.filter(p=>p.owned!==false).map(p=>({...p, source:"box", netScore:Number(p.score||65)}));
+  let budget = Number(state.pv||0);
+  if (mode === "theory"){
+    for (const r of state.recruits){
+      if (Number(r.cost||999999) <= budget) pool.push({...r, role:"Ingaggio teorico", source:"ingaggio", netScore:Number(r.score||65) - Math.round(Number(r.cost||0)/1600)});
+    }
+  }
+  const namesPenalty = new Set();
+  const team = pool
+    .filter(p => !namesPenalty.has(p.name) && namesPenalty.add(p.name))
+    .sort((a,b)=>b.netScore-a.netScore)
+    .slice(0,6);
+  const bestThree = [...team].sort((a,b)=>b.netScore-a.netScore).slice(0,3);
+  const html = `<div class="notice"><b>${mode==="theory"?"Team teorico con ingaggi":"Team con risorse attuali"}</b><br>${team.map(p=>`${esc(p.name)}${p.source==="ingaggio"?" (ingaggio)":""}`).join(" · ")}</div>
+  <div class="notice"><b>Bozza Singolo 3v3:</b> ${bestThree.map(p=>esc(p.name)).join(" · ")}<br><b>Lead provvisorio:</b> ${esc(bestThree[0]?.name || "—")}</div>
+  <table><thead><tr><th>Pokémon</th><th>Fonte</th><th>Ruolo</th><th>Score</th></tr></thead><tbody>
+  ${team.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.source)}</td><td>${esc(p.role||p.note||"—")}</td><td>${esc(p.netScore)}</td></tr>`).join("")}
+  </tbody></table>
+  <div class="notice"><b>Priorità provvisoria:</b> valutare Gyarados, Zoroark Hisui e Rotom Vortice come alternative concrete a Raichu/Spiritomb; rivedere Rapidartiglio su Sylveon; confermare se Dragonite resta speciale o passa fisico.</div>`;
+  document.getElementById("teamResult").innerHTML = html;
+  document.getElementById("quickResult").innerHTML = html;
+  go("team");
+}
+function addPokemon(){
+  const input = document.getElementById("newPokemonName");
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.roster.some(p=>p.name.toLowerCase()===name.toLowerCase())) state.roster.push(normalizePokemon({name, owned:true, role:"Aggiunto manualmente", score:65}));
+  input.value = "";
+  saveData();
+}
+function addItem(){
+  const input = document.getElementById("newItemName");
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.items.some(x=>x.toLowerCase()===name.toLowerCase())) state.items.push(name);
+  input.value = "";
+  saveData();
+}
+function importFromFile(){
+  const file = document.getElementById("jsonFile").files[0];
+  if (!file){ statusMsg("Seleziona prima un file JSON.", true); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      state = normalizeImported(JSON.parse(reader.result));
+      saveData();
+      document.getElementById("jsonFile").value = "";
+      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v0.9.`);
+      go("home");
+    }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
+  };
+  reader.readAsText(file);
+}
+function importFromText(){
+  try{
+    const txt = document.getElementById("jsonBox").value.trim();
+    if (!txt){ statusMsg("Incolla prima un JSON.", true); return; }
+    state = normalizeImported(JSON.parse(txt));
+    saveData();
+    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v0.9.`);
+    go("home");
+  }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
+}
+function exportJson(){
+  state = normalizeImported(state);
+  const txt = JSON.stringify(state,null,2);
+  document.getElementById("jsonBox").value = txt;
+  const blob = new Blob([txt], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "champions-manager-dati-export-v09.json";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  statusMsg("Export v0.9 generato con build Singolo/Doppio, varianti 3v3 e piani Doppio.");
+  go("dati");
+}
+async function copyJson(){
+  state = normalizeImported(state);
+  const txt = JSON.stringify(state,null,2);
+  document.getElementById("jsonBox").value = txt;
+  try{ await navigator.clipboard.writeText(txt); statusMsg("JSON copiato negli appunti."); }
+  catch(e){ statusMsg("JSON mostrato nel riquadro: copia manualmente.", true); }
+}
+function resetData(){
+  if (!confirm("Resetto i dati locali v0.9 e torno ai dati iniziali?")) return;
+  state = normalizeImported(deepClone(defaultData));
+  saveData();
+  statusMsg("Reset completato.");
+}
+function statusMsg(msg, err=false){
+  const el = document.getElementById("importStatus");
+  el.className = err ? "dangerBox" : "notice";
+  el.textContent = msg;
+}
+async function killOldServiceWorkers(){
+  let report = [];
+  if ("serviceWorker" in navigator){
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (const r of regs){ await r.unregister(); report.push("SW rimosso"); }
+  }
+  if ("caches" in window){
+    const keys = await caches.keys();
+    for (const k of keys){ await caches.delete(k); report.push("cache " + k + " eliminata"); }
+  }
+  document.getElementById("cacheStatus").textContent = report.length ? report.join(" · ") + " · ricarica la pagina." : "Nessun service worker/cache trovato.";
+}
+(function boot(){
+  initNav();
+  state = normalizeImported(state);
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  render();
+  go((location.hash||"#home").slice(1));
+  if ("serviceWorker" in navigator){
+    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(()=>{});
+  }
+})();
+</script>
+</body>
+</html>

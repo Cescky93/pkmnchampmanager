@@ -72,3 +72,9 @@ Per aggiornamenti grossi:
 Il motore di consiglio è euristico. Serve per uso personale e per guidare le priorità, ma non verifica automaticamente legalità competitive, regolamenti aggiornati, costi reali di ingaggio o cambiamenti del meta.
 
 I nomi di mosse, abilità, oggetti, nature e statistiche sono impostati in italiano quando presenti nel database.
+
+
+## Patch v0.3
+- Correzione navigazione barra inferiore su PC/mobile/PWA.
+- Nuova chiave localStorage per evitare dati/cache vecchi.
+- Service worker aggiornato: se GitHub continua a mostrare la versione vecchia, fare refresh forzato o svuotare dati sito.

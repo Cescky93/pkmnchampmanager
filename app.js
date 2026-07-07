@@ -1,4 +1,4 @@
-const STORAGE_KEY = "champions-manager-data-v02";
+const STORAGE_KEY = "champions-manager-data-v03";
 let data = loadData();
 let deferredInstallPrompt = null;
 
@@ -118,11 +118,16 @@ function nextActionText() {
 }
 
 function renderAll() {
-  $("pvInput").value = data.pv;
-  $("boxCount").textContent = `${ownedPokemon().length}/30`;
-  $("itemCount").textContent = data.items.reduce((a,i)=>a+Number(i.qty||0),0);
-  $("nextAction").innerHTML = nextActionText();
-  renderQuickTeam(); renderRoster(); renderItems(); renderHires(); renderJson();
+  try {
+    $("pvInput").value = data.pv;
+    $("boxCount").textContent = `${ownedPokemon().length}/30`;
+    $("itemCount").textContent = (data.items || []).reduce((a,i)=>a+Number(i.qty||0),0);
+    $("nextAction").innerHTML = nextActionText();
+    renderQuickTeam(); renderRoster(); renderItems(); renderHires(); renderJson();
+  } catch (err) {
+    console.error("Errore render:", err);
+    alert("Ho trovato un dato non valido. Vai in Dati e premi Ripristina dati iniziali, oppure importa un JSON valido.");
+  }
 }
 function renderQuickTeam() {
   const best = optimize("theory", "balanced").team;
@@ -192,10 +197,27 @@ function download(filename, text) {
 // Events
 window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredInstallPrompt = e; $("installBtn").classList.remove("hidden"); });
 $("installBtn").onclick = async () => { if (deferredInstallPrompt) deferredInstallPrompt.prompt(); };
-document.querySelectorAll(".bottom-nav button").forEach(btn => btn.onclick = () => {
-  document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.remove("active")); btn.classList.add("active");
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); $(btn.dataset.screen).classList.add("active");
+function goToScreen(screenId) {
+  const target = document.getElementById(screenId);
+  if (!target) return;
+  document.querySelectorAll(".bottom-nav button").forEach(b => b.classList.toggle("active", b.dataset.screen === screenId));
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === screenId));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Navigazione robusta: funziona con mouse, touch e PWA installata.
+document.querySelector(".bottom-nav")?.addEventListener("click", (ev) => {
+  const btn = ev.target.closest("button[data-screen]");
+  if (!btn) return;
+  ev.preventDefault();
+  goToScreen(btn.dataset.screen);
 });
+document.querySelector(".bottom-nav")?.addEventListener("touchend", (ev) => {
+  const btn = ev.target.closest("button[data-screen]");
+  if (!btn) return;
+  ev.preventDefault();
+  goToScreen(btn.dataset.screen);
+}, { passive: false });
 $("pvInput").onchange = () => { data.pv = Number($("pvInput").value || 0); saveData(); };
 $("recalcHome").onclick = renderAll;
 $("optimizeBtn").onclick = () => renderTeamResult(optimize($("calcMode").value, $("teamStyle").value), $("calcMode").value);
@@ -220,7 +242,7 @@ $("addHireBtn").onclick = () => {
 };
 $("exportAiBtn").onclick = exportAI;
 $("downloadJsonBtn").onclick = () => download("champions-manager-dati.json", JSON.stringify(data, null, 2));
-$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { data = clone(DEFAULT_DATA); saveData(); } };
+$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { localStorage.removeItem("champions-manager-data-v02"); localStorage.removeItem("champions-manager-data-v03"); data = clone(DEFAULT_DATA); saveData(); } };
 $("jsonEditor").onchange = () => { try { data = JSON.parse($("jsonEditor").value); saveData(); } catch { alert("JSON non valido"); } };
 $("importJson").onchange = async (ev) => {
   const file = ev.target.files[0]; if (!file) return;

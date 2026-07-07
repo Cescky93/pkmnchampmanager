@@ -1,26 +1,20 @@
-const CACHE_NAME = "pkmnchampmanager-v05";
-const ASSETS = ["./", "./index.html", "./styles.css", "./data.js", "./app.js", "./manifest.json"];
-self.addEventListener("install", event => {
+// Pokémon Champions Manager v0.8 cache-kill
+// Questo file serve solo a neutralizzare eventuali service worker vecchi.
+self.addEventListener('install', event => {
   self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
 });
-self.addEventListener("activate", event => {
+self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)));
-    await self.clients.claim();
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+      await self.registration.unregister();
+      const clientsList = await self.clients.matchAll({type: 'window'});
+      for (const client of clientsList) client.navigate(client.url);
+    } catch (e) {}
   })());
 });
-self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-  event.respondWith((async () => {
-    try {
-      const fresh = await fetch(event.request);
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(event.request, fresh.clone());
-      return fresh;
-    } catch {
-      return caches.match(event.request);
-    }
-  })());
+self.addEventListener('fetch', event => {
+  // Network-first minimale: non servire mai index vecchi dalla cache.
+  event.respondWith(fetch(event.request).catch(() => new Response('Offline temporaneo. Ricarica appena possibile.', {status: 503})));
 });

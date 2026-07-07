@@ -1,557 +1,392 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#6d5dfc" />
-  <title>Champions Manager v0.6</title>
-  
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#7c3aed">
+  <title>Pokémon Champions Manager v0.8</title>
   <style>
-:root{--bg:#101222;--card:#191c33;--card2:#222646;--text:#f5f6ff;--muted:#aab0d6;--primary:#7d6dff;--primary2:#9dff57;--danger:#ff5d7a;--line:#303657;--warn:#ffd166;--shadow:0 16px 40px rgba(0,0,0,.28)}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#273064 0,#101222 48%,#0b0d18 100%);color:var(--text);padding-bottom:92px}button,input,select,textarea{font:inherit}button{border:0;border-radius:16px;padding:12px 16px;background:var(--card2);color:var(--text);font-weight:750}button:active{transform:scale(.98)}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:16px;background:#101426;color:var(--text);padding:13px 14px;outline:none}textarea{min-height:360px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}.app-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;background:linear-gradient(180deg,rgba(16,18,34,.96),rgba(16,18,34,.76));backdrop-filter:blur(10px)}h1{font-size:24px;margin:0}h2{font-size:19px;margin:0 0 14px}.eyebrow{margin:0 0 2px;color:var(--primary2);text-transform:uppercase;font-size:12px;font-weight:800;letter-spacing:.08em}.muted{color:var(--muted)}main{padding:0 14px}.screen{display:none;max-width:980px;margin:auto}.screen.active{display:block}.card{background:linear-gradient(180deg,rgba(25,28,51,.98),rgba(21,24,43,.98));border:1px solid var(--line);border-radius:24px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}.hero{display:flex;justify-content:space-between;gap:16px;align-items:center;background:linear-gradient(135deg,#2a2f61,#181b35)}.pv-row{display:flex;align-items:center;gap:10px}.pv-row input{font-size:26px;font-weight:900;max-width:190px}.pv-row span{font-weight:900;color:var(--primary2)}.primary{background:linear-gradient(135deg,var(--primary),#5648e7);color:white}.danger{background:rgba(255,93,122,.15);color:#ff9bad;border:1px solid rgba(255,93,122,.35)}.pill{border-radius:999px;background:var(--primary2);color:#11152a}.hidden{display:none}.full{width:100%}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat span{display:block;color:var(--muted);font-size:13px}.stat strong{font-size:26px}.callout{border-left:4px solid var(--primary2);padding:12px;background:rgba(157,255,87,.07);border-radius:14px}.team-mini{display:flex;flex-wrap:wrap;gap:8px}.team-mini span{padding:10px 12px;border-radius:999px;background:#252a4d;border:1px solid var(--line);font-weight:800}.controls label{display:block;margin:12px 0;color:var(--muted);font-weight:650}.controls label select,.controls label input{margin-top:6px}.team-cards{display:grid;grid-template-columns:1fr;gap:12px}.poke-card{border:1px solid var(--line);background:#11162a;border-radius:20px;padding:14px}.poke-card.hire{border-color:rgba(157,255,87,.55)}.poke-card header{display:flex;justify-content:space-between;gap:10px}.poke-card strong{font-size:18px}.poke-card em{color:var(--primary2);font-style:normal;font-size:12px;text-align:right}.poke-card p{margin:8px 0;color:#dce0ff}.warn{color:var(--warn)}.plan{padding-left:22px}.plan li{margin:10px 0;padding:12px;border-radius:16px;background:#11162a}.plan li span{color:var(--primary2);font-weight:900}.plan li b{float:right}.plan li.locked{opacity:.58}.inline-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:12px}.hire-form{display:grid;grid-template-columns:1fr 110px;gap:8px}.hire-form select,.hire-form button{grid-column:span 2}.list,.item-list{display:grid;gap:10px}.row-card{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);background:#11162a;border-radius:18px;padding:12px}.row-card small{display:block;color:var(--muted);margin-top:3px}.small{padding:8px 10px;border-radius:12px}.qty{display:flex;gap:6px}.qty button{min-width:42px}.item-list h3{margin:12px 0 0;color:var(--primary2);font-size:15px}.button-stack{display:grid;gap:10px;margin-bottom:12px}.file-label{display:block;text-align:center;border-radius:16px;padding:12px 16px;background:var(--card2);font-weight:750}.file-label input{display:none}.bottom-nav{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(12,14,28,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);z-index:20}.bottom-nav a{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:10px 4px;border-radius:14px;font-size:12px;font-weight:750;color:var(--muted);background:transparent;min-height:42px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bottom-nav a.active{background:var(--primary);color:white}@media(min-width:760px){main{padding:0 24px}.team-cards{grid-template-columns:repeat(2,1fr)}.hire-form{grid-template-columns:1fr 140px 180px auto}.hire-form select,.hire-form button{grid-column:auto}.bottom-nav{left:50%;transform:translateX(-50%);max-width:920px;border-radius:24px 24px 0 0}.app-header{padding-left:32px;padding-right:32px}}
-
-/* v0.7 importfix one-file */
-
-
-.top-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:980px;margin:8px auto 0;padding:0 14px}.top-tabs button,.bottom-nav button{cursor:pointer;user-select:none}.top-tabs button{font-size:13px;border:1px solid var(--line)}.top-tabs button.active,.bottom-nav button.active{background:var(--primary);color:#fff}.bottom-nav button{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:10px 4px;border-radius:14px;font-size:12px;font-weight:750;color:var(--muted);background:transparent;min-height:42px;-webkit-tap-highlight-color:transparent;touch-action:manipulation} .bottom-nav a{display:none!important}
+    :root{
+      --bg:#0f1020;--card:#1a1b33;--card2:#23244a;--txt:#f6f7fb;--muted:#b8bad3;
+      --accent:#a3e635;--accent2:#7c3aed;--danger:#ef4444;--ok:#22c55e;--line:#34365f;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#14162e,#0d0e1d);color:var(--txt);padding-bottom:86px}
+    header{position:sticky;top:0;z-index:10;background:rgba(15,16,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px}
+    h1{font-size:18px;margin:0 0 4px}
+    .sub{font-size:12px;color:var(--muted)}
+    .wrap{max-width:980px;margin:0 auto;padding:12px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 10px 22px rgba(0,0,0,.18)}
+    .card h2{font-size:17px;margin:0 0 10px}
+    .pill{display:inline-flex;gap:6px;align-items:center;background:var(--card2);border:1px solid var(--line);padding:7px 10px;border-radius:999px;margin:4px 4px 4px 0;font-size:13px}
+    .pill.good{border-color:rgba(163,230,53,.55)}
+    .pill.warn{border-color:rgba(245,158,11,.65)}
+    .big{font-size:30px;font-weight:800;color:var(--accent)}
+    button,.btn,input,textarea,select{font:inherit}
+    button,.btn{border:0;border-radius:12px;padding:11px 12px;background:var(--accent2);color:white;font-weight:700;cursor:pointer}
+    button.secondary{background:var(--card2);border:1px solid var(--line)}
+    button.good{background:#16a34a}
+    button.danger{background:#dc2626}
+    input,textarea,select{width:100%;background:#111327;color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:11px;margin:6px 0 10px}
+    textarea{min-height:180px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+    .tabsTop{display:flex;gap:8px;overflow:auto;padding-top:10px}
+    .tabBtn{white-space:nowrap;background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:9px 12px}
+    .tabBtn.active{background:var(--accent);color:#111827}
+    .bottomNav{position:fixed;bottom:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;background:rgba(15,16,32,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom))}
+    .bottomNav a{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:12px;background:var(--card2);color:var(--txt);text-decoration:none;font-size:12px;font-weight:800;border:1px solid var(--line)}
+    .bottomNav a.active{background:var(--accent);color:#111827}
+    section{display:none}
+    section.active{display:block}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .muted{color:var(--muted)}
+    .notice{padding:10px 12px;border-radius:12px;background:#13251a;border:1px solid rgba(34,197,94,.45);margin:10px 0}
+    .dangerBox{padding:10px 12px;border-radius:12px;background:#2b1414;border:1px solid rgba(239,68,68,.45);margin:10px 0}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{color:var(--muted);font-weight:700}
+    @media (min-width:760px){h1{font-size:22px}.bottomNav{max-width:980px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}}
   </style>
-  <script>
-    window.showPage = function(screenId) {
-      var target = document.getElementById(screenId);
-      if (!target) return false;
-      document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('active', s.id === screenId); });
-      document.querySelectorAll('[data-screen]').forEach(function(b){ b.classList.toggle('active', b.dataset.screen === screenId); });
-      try { history.replaceState(null, '', '#' + screenId); } catch(e) {}
-      window.scrollTo(0,0);
-      return false;
-    };
-  </script>
 </head>
 <body>
-  <header class="app-header">
-    <div>
-      <p class="eyebrow">Pokémon Champions</p>
-      <h1>Team Manager <small style="font-size:12px;color:#aab0d6">v0.6</small></h1>
+<header>
+  <div class="wrap">
+    <h1>Pokémon Champions Manager <span class="muted">v0.8 cache-kill</span></h1>
+    <div class="sub">One-file · menu senza service worker · import JSON visibile · dati personali locali</div>
+    <nav class="tabsTop" id="tabsTop"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="home" class="active">
+    <div class="grid">
+      <div class="card"><h2>PV disponibili</h2><div class="big" id="pvView">—</div><div class="muted">Risorsa condivisa per allenamenti e ingaggi</div></div>
+      <div class="card"><h2>Rosa</h2><div class="big" id="ownedCount">—</div><div class="muted">Pokémon registrati come posseduti</div></div>
+      <div class="card"><h2>Oggetti</h2><div class="big" id="itemCount">—</div><div class="muted">Strumenti/Megapietre disponibili</div></div>
     </div>
-    <button id="installBtn" class="pill hidden">Installa</button>
-  </header>
-
-  <nav class="top-tabs" aria-label="Navigazione rapida">
-    <button type="button" data-screen="home" onclick="return showPage('home')" class="active">Home</button>
-    <button type="button" data-screen="optimizer" onclick="return showPage('optimizer')">Team</button>
-    <button type="button" data-screen="roster" onclick="return showPage('roster')">Rosa</button>
-    <button type="button" data-screen="items" onclick="return showPage('items')">Oggetti</button>
-    <button type="button" data-screen="hires" onclick="return showPage('hires')">Ingaggi</button>
-    <button type="button" data-screen="data" onclick="return showPage('data')">Dati</button>
-  </nav>
-
-  <main>
-    <section id="home" class="screen active">
-      <div class="hero card">
-        <div>
-          <p class="muted">PV disponibili</p>
-          <div class="pv-row"><input id="pvInput" type="number" min="0" inputmode="numeric" /><span>PV</span></div>
-        </div>
-        <button id="recalcHome" class="primary">Ricalcola</button>
+    <div class="card">
+      <h2>Azioni rapide</h2>
+      <div class="row">
+        <button onclick="optimize('current')">Ottimizza con risorse attuali</button>
+        <button onclick="optimize('theory')" class="secondary">Team teorico con ingaggi</button>
+        <button onclick="go('dati')" class="good">Import/Export JSON</button>
       </div>
-      <div class="grid-2">
-        <article class="card stat"><span>Box</span><strong id="boxCount">—</strong></article>
-        <article class="card stat"><span>Oggetti</span><strong id="itemCount">—</strong></article>
+      <div id="quickResult" class="notice">Pronto. Usa i tasti in alto o in basso per cambiare sezione.</div>
+    </div>
+    <div class="card">
+      <h2>Squadra attuale</h2>
+      <div id="currentTeamPills"></div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="card">
+      <h2>Team consigliato</h2>
+      <p class="muted">Prima stima euristica basata su ruoli, oggetti, mega, copertura e risorse.</p>
+      <div class="row">
+        <button onclick="optimize('current')">Solo ciò che ho</button>
+        <button onclick="optimize('theory')" class="secondary">Teorico con ingaggi</button>
       </div>
-      <article class="card">
-        <h2>Prossima decisione</h2>
-        <div id="nextAction" class="callout">Calcolo in attesa.</div>
-      </article>
-      <article class="card">
-        <h2>Team rapido consigliato</h2>
-        <div id="quickTeam" class="team-mini"></div>
-      </article>
-    </section>
+      <div id="teamResult"></div>
+    </div>
+  </section>
 
-    <section id="optimizer" class="screen">
-      <div class="card controls">
-        <h2>Ottimizzatore</h2>
-        <label>Modalità di calcolo
-          <select id="calcMode">
-            <option value="owned">Solo quello che ho</option>
-            <option value="theory" selected>Teorico con ingaggi</option>
-            <option value="save">Risparmio PV</option>
-            <option value="push">Spinta competitiva</option>
-          </select>
-        </label>
-        <label>Stile squadra
-          <select id="teamStyle">
-            <option value="balanced" selected>Bilanciato</option>
-            <option value="offense">Offensivo</option>
-            <option value="bulky">Bulky / controllo</option>
-            <option value="trickroom">Distortozona</option>
-          </select>
-        </label>
-        <button id="optimizeBtn" class="primary full">Calcola miglior team</button>
+  <section id="rosa">
+    <div class="card">
+      <h2>Rosa / Box</h2>
+      <div id="rosterList"></div>
+    </div>
+    <div class="card">
+      <h2>Aggiungi Pokémon rapido</h2>
+      <input id="newPokemonName" placeholder="Nome Pokémon, es. Incineroar">
+      <button onclick="addPokemon()">Aggiungi alla rosa</button>
+    </div>
+  </section>
+
+  <section id="oggetti">
+    <div class="card">
+      <h2>Oggetti disponibili</h2>
+      <div id="itemsList"></div>
+    </div>
+    <div class="card">
+      <h2>Aggiungi oggetto rapido</h2>
+      <input id="newItemName" placeholder="Nome oggetto, es. Focalnastro">
+      <button onclick="addItem()">Aggiungi oggetto</button>
+    </div>
+  </section>
+
+  <section id="ingaggi">
+    <div class="card">
+      <h2>Candidati ingaggio</h2>
+      <p class="muted">Costi e disponibilità sono placeholder da aggiornare quando mi mostri pascolo/Home.</p>
+      <div id="recruitsList"></div>
+    </div>
+  </section>
+
+  <section id="dati">
+    <div class="card">
+      <h2>Import / Export dati</h2>
+      <p class="muted">Carica il JSON che ti preparo io, oppure esporta quello aggiornato e rimandamelo.</p>
+      <input type="file" id="jsonFile" accept=".json,application/json">
+      <div class="row">
+        <button onclick="importFromFile()">Importa file JSON</button>
+        <button onclick="exportJson()" class="secondary">Esporta JSON</button>
+        <button onclick="resetData()" class="danger">Reset dati v0.8</button>
       </div>
-      <article class="card">
-        <h2>Risultato</h2>
-        <div id="optimizerSummary" class="muted">Premi calcola.</div>
-        <div id="teamCards" class="team-cards"></div>
-      </article>
-      <article class="card">
-        <h2>Piano PV graduale</h2>
-        <ol id="planList" class="plan"></ol>
-      </article>
-    </section>
-
-    <section id="roster" class="screen">
-      <div class="card">
-        <h2>Rosa</h2>
-        <div class="inline-form">
-          <input id="pokemonSearch" placeholder="Cerca Pokémon" />
-          <button id="addPokemonBtn">+ Pokémon</button>
-        </div>
-        <div id="rosterList" class="list"></div>
+      <div id="importStatus" class="notice">Nessun import eseguito in questa sessione.</div>
+      <textarea id="jsonBox" placeholder="Qui puoi incollare o vedere il JSON..."></textarea>
+      <div class="row">
+        <button onclick="importFromText()">Applica JSON incollato</button>
+        <button onclick="copyJson()" class="secondary">Copia JSON attuale</button>
       </div>
-    </section>
+    </div>
+    <div class="card">
+      <h2>Diagnostica cache</h2>
+      <button onclick="killOldServiceWorkers()" class="danger">Rimuovi vecchi service worker/cache</button>
+      <div id="cacheStatus" class="muted">Questa v0.8 prova anche a disattivare i vecchi service worker delle versioni precedenti.</div>
+    </div>
+  </section>
+</main>
 
-    <section id="items" class="screen">
-      <div class="card">
-        <h2>Oggetti</h2>
-        <div class="inline-form">
-          <input id="itemName" placeholder="Nome oggetto" />
-          <button id="addItemBtn">+ Oggetto</button>
-        </div>
-        <div id="itemsList" class="item-list"></div>
-      </div>
-    </section>
+<nav class="bottomNav" id="bottomNav"></nav>
 
-    <section id="hires" class="screen">
-      <div class="card">
-        <h2>Ingaggi candidati</h2>
-        <p class="muted">Inserisci qui Pokémon dal pascolo o da HOME con costo stimato in PV. Se il costo non è noto, lascia 0 e l’app lo tratterà come da confermare.</p>
-        <div class="hire-form">
-          <input id="hireName" placeholder="Pokémon" />
-          <input id="hireCost" type="number" min="0" inputmode="numeric" placeholder="Costo PV" />
-          <select id="hireRole">
-            <option value="supporto">Supporto</option>
-            <option value="attaccante fisico">Att. fisico</option>
-            <option value="attaccante speciale">Att. speciale</option>
-            <option value="bulky">Bulky</option>
-            <option value="speed control">Speed control</option>
-          </select>
-          <button id="addHireBtn">+ Candidato</button>
-        </div>
-        <div id="hireList" class="list"></div>
-      </div>
-    </section>
+<script>
+const VERSION = "v0.8-cachekill";
+const STORE_KEY = "pkmn_champions_manager_v08";
 
-    <section id="data" class="screen">
-      <div class="card">
-        <h2>Dati / IA</h2>
-        <div class="button-stack">
-          <button id="exportAiBtn" class="primary">Esporta richiesta per IA</button>
-          <button id="downloadJsonBtn">Scarica JSON</button>
-          <label class="file-label">Importa JSON<input id="importJson" type="file" accept="application/json,.json"></label>
-          <button id="applyJsonBtn">Applica JSON incollato</button>
-          <p id="importStatus" class="callout hidden"></p>
-          <button id="resetBtn" class="danger">Ripristina dati iniziali</button>
-        </div>
-        <textarea id="jsonEditor" spellcheck="false"></textarea>
-      </div>
-    </section>
-  </main>
-
-  <nav class="bottom-nav" aria-label="Navigazione principale">
-    <button type="button" data-screen="home" onclick="return showPage('home')" class="active">Home</button>
-    <button type="button" data-screen="optimizer" onclick="return showPage('optimizer')">Team</button>
-    <button type="button" data-screen="roster" onclick="return showPage('roster')">Rosa</button>
-    <button type="button" data-screen="items" onclick="return showPage('items')">Oggetti</button>
-    <button type="button" data-screen="hires" onclick="return showPage('hires')">Ingaggi</button>
-    <button type="button" data-screen="data" onclick="return showPage('data')">Dati</button>
-  </nav>
-
-
-  <script>
-const DEFAULT_DATA = {
-  version: "0.7-importfix",
-  updatedAt: "2026-07-07",
+const defaultData = {
   pv: 8366,
-  language: "it",
-  currentTeam: ["Lucario", "Spiritomb", "Sylveon", "Dragonite", "Snorlax", "Raichu"],
-  items: [
-    { name: "Erbachiara", category: "Statistiche", qty: 1 },
-    { name: "Stolascelta", category: "Statistiche", qty: 1 },
-    { name: "Miracolseme", category: "Potenza", qty: 1 },
-    { name: "Bandana", category: "Difesa", qty: 1 },
-    { name: "Focalnastro", category: "Difesa", qty: 1 },
-    { name: "Avanzi", category: "Cura", qty: 1 },
-    { name: "Baccaprugna", category: "Cura", qty: 1 },
-    { name: "Baccacedro", category: "Cura", qty: 1 },
-    { name: "Raichuite X", category: "Megapietra", qty: 1 },
-    { name: "Raichuite Y", category: "Megapietra", qty: 1 },
-    { name: "Dragonitite", category: "Megapietra", qty: 1 },
-    { name: "Lucarite", category: "Megapietra", qty: 1 },
-    { name: "Chesnaughtite", category: "Megapietra", qty: 1 },
-    { name: "Luminpolvere", category: "Altro", qty: 1 },
-    { name: "Rapidartiglio", category: "Altro", qty: 1 },
-    { name: "Roccia di re", category: "Altro", qty: 1 }
-  ],
+  currentTeam: ["Lucario","Spiritomb","Sylveon","Dragonite","Snorlax","Raichu"],
   assignedItems: {
-    "Lucario": "Lucarite",
-    "Spiritomb": "Baccacedro",
-    "Sylveon": "Rapidartiglio",
-    "Dragonite": "Dragonitite",
-    "Snorlax": "Avanzi",
-    "Raichu": "Raichuite Y"
+    "Lucario":"Lucarite",
+    "Spiritomb":"Baccacedro",
+    "Sylveon":"Rapidartiglio",
+    "Dragonite":"Dragonitite",
+    "Snorlax":"Avanzi",
+    "Raichu":"Raichuite Y"
   },
-  pokemon: [
-    {
-      name: "Lucario", owned: true, types: ["Lotta", "Acciaio"], role: "attaccante speciale", tags: ["mega", "setup", "priority"], meta: 82,
-      current: { ability: "Forza Interiore", item: "Lucarite", nature: "Modesta", moves: ["Sferapulsar", "Cannonflash", "Vuotonda", "Congiura"] },
-      ideal: { ability: "Adattabilità", item: "Lucarite", nature: "Timida", moves: ["Forzasfera", "Cannonflash", "Vuotonda", "Congiura"], stats: { "PS": 4, "Attacco": 0, "Difesa": 0, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 252 } },
-      upgrades: [{ text: "Confermare Mega Lucario come win condition speciale", cost: 900, impact: 25 }, { text: "Ottimizzare Velocità e Attacco Speciale", cost: 1600, impact: 30 }, { text: "Valutare Protezione al posto di una copertura se giochi VGC", cost: 500, impact: 10 }]
-    },
-    {
-      name: "Sylveon", owned: true, types: ["Folletto"], role: "attaccante speciale", tags: ["spread", "yawn", "fairy"], meta: 76,
-      current: { ability: "Pellefolletto", item: "Rapidartiglio", nature: "Modesta", moves: ["Granvoce", "Palla Ombra", "Sbadiglio", "Coro"] },
-      ideal: { ability: "Pellefolletto", item: "Stolascelta", nature: "Modesta", moves: ["Granvoce", "Palla Ombra", "Sbadiglio", "Protezione"], stats: { "PS": 196, "Attacco": 0, "Difesa": 60, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 0 } },
-      upgrades: [{ text: "Sostituire Rapidartiglio: è troppo casuale per una build stabile", cost: 0, impact: 18 }, { text: "Massimizzare Attacco Speciale", cost: 1200, impact: 24 }, { text: "Tenere Granvoce + Pellefolletto come asse principale", cost: 0, impact: 15 }]
-    },
-    {
-      name: "Dragonite", owned: true, types: ["Drago", "Volante"], role: "attaccante fisico", tags: ["mega", "priority", "setup"], meta: 84,
-      current: { ability: "Multisquame", item: "Dragonitite", nature: "Modesta", moves: ["Dragobolide", "Lanciafiamme", "Geloraggio", "Extrarapido"] },
-      ideal: { ability: "Pellecielo", item: "Dragonitite", nature: "Decisa", moves: ["Dragodanza", "Extrarapido", "Terremoto", "Protezione"], stats: { "PS": 4, "Attacco": 252, "Difesa": 0, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 252 } },
-      upgrades: [{ text: "Decidere se convertirlo da speciale a fisico: probabile upgrade grosso", cost: 1800, impact: 34 }, { text: "Tenere Extrarapido come priorità", cost: 0, impact: 18 }, { text: "Aggiungere Dragodanza solo se lo giochi da cleaner", cost: 900, impact: 22 }]
-    },
-    {
-      name: "Raichu", owned: true, types: ["Elettro"], role: "supporto", tags: ["mega", "speed", "electric"], meta: 66,
-      current: { ability: "Parafulmine", item: "Raichuite Y", nature: "Timida", moves: ["Elettrocannone", "Carineria", "Assorbipugno", "Apripista"] },
-      ideal: { ability: "Parafulmine", item: "Raichuite Y", nature: "Timida", moves: ["Bruciapelo", "Invertivolt", "Elettrotela", "Protezione"], stats: { "PS": 4, "Attacco": 0, "Difesa": 0, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 252 } },
-      upgrades: [{ text: "Ridurre mosse imprecise/situazionali: Elettrocannone è rischiosa", cost: 600, impact: 20 }, { text: "Usarlo come supporto veloce più che come sweeper", cost: 900, impact: 18 }]
-    },
-    {
-      name: "Snorlax", owned: true, types: ["Normale"], role: "bulky", tags: ["trickroom", "yawn", "tank"], meta: 79,
-      current: { ability: "Grassospesso", item: "Avanzi", nature: "Vivace", moves: ["Sbadiglio", "Corposcontro", "Terremoto", "Pesobomba"] },
-      ideal: { ability: "Grassospesso", item: "Avanzi", nature: "Audace", moves: ["Sbadiglio", "Corposcontro", "Terremoto", "Protezione"], stats: { "PS": 252, "Attacco": 156, "Difesa": 100, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 0 } },
-      upgrades: [{ text: "Mantenerlo se Spiritomb resta con Distortozona", cost: 0, impact: 16 }, { text: "Investire PS + Attacco, velocità bassa se giochi Distortozona", cost: 1500, impact: 26 }]
-    },
-    {
-      name: "Spiritomb", owned: true, types: ["Spettro", "Buio"], role: "supporto", tags: ["trickroom", "special", "ghost"], meta: 70,
-      current: { ability: "Intrapasso", item: "Baccacedro", nature: "Quieta", moves: ["Congiura", "Psichico", "Distortozona", "Palla Ombra"] },
-      ideal: { ability: "Intrapasso", item: "Baccacedro", nature: "Quieta", moves: ["Distortozona", "Palla Ombra", "Fuocofatuo", "Protezione"], stats: { "PS": 252, "Attacco": 0, "Difesa": 116, "Attacco Speciale": 140, "Difesa Speciale": 0, "Velocità": 0 } },
-      upgrades: [{ text: "Chiarire ruolo: setter Distortozona o attaccante con Congiura", cost: 300, impact: 18 }, { text: "Se resta setter, aggiungere utility/difesa", cost: 800, impact: 22 }]
-    },
-    { name: "Gyarados", owned: true, types: ["Acqua", "Volante"], role: "attaccante fisico", tags: ["intimidate", "setup", "water"], meta: 83, current: { ability: "Prepotenza", item: "", nature: "Decisa", moves: ["Cascata", "Terremoto", "Gelodenti", "Dragodanza"] }, ideal: { ability: "Prepotenza", item: "Baccaprugna", nature: "Decisa", moves: ["Cascata", "Terremoto", "Gelodenti", "Dragodanza"], stats: { "PS": 4, "Attacco": 252, "Difesa": 0, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Candidato forte a entrare al posto di Raichu se serve presenza fisica", cost: 900, impact: 28 }] },
-    { name: "Zoroark Forma di Hisui", owned: true, types: ["Normale", "Spettro"], role: "attaccante speciale", tags: ["ghost", "speed", "immunity"], meta: 81, current: { ability: "Illusione", item: "", nature: "Timida", moves: ["Palla Ombra", "Ipervoce", "Lanciafiamme", "Congiura"] }, ideal: { ability: "Illusione", item: "Focalnastro", nature: "Timida", moves: ["Palla Ombra", "Ipervoce", "Lanciafiamme", "Protezione"], stats: { "PS": 4, "Attacco": 0, "Difesa": 0, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Molto buon candidato offensivo speciale; valutare Focalnastro", cost: 1200, impact: 30 }] },
-    { name: "Rotom Forma Vortice", owned: true, types: ["Elettro", "Volante"], role: "supporto", tags: ["levitate", "electric", "pivot"], meta: 74, current: { ability: "Levitazione", item: "", nature: "Calma", moves: ["Fulmine", "Invertivolt", "Fuocofatuo", "Protezione"] }, ideal: { ability: "Levitazione", item: "Baccacedro", nature: "Calma", moves: ["Fulmine", "Invertivolt", "Fuocofatuo", "Protezione"], stats: { "PS": 252, "Attacco": 0, "Difesa": 80, "Attacco Speciale": 44, "Difesa Speciale": 132, "Velocità": 0 } }, upgrades: [{ text: "Buona alternativa a Raichu se vuoi più solidità", cost: 800, impact: 22 }] },
-    { name: "Blaziken", owned: true, types: ["Fuoco", "Lotta"], role: "attaccante fisico", tags: ["speed", "fire", "fighting"], meta: 78, current: { ability: "Acceleratore", item: "", nature: "Decisa", moves: ["Fuococarica", "Zuffa", "Protezione", "Danzaspada"] }, ideal: { ability: "Acceleratore", item: "Focalnastro", nature: "Decisa", moves: ["Fuococarica", "Zuffa", "Protezione", "Danzaspada"], stats: { "PS": 4, "Attacco": 252, "Difesa": 0, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Candidato offensivo se serve Fuoco/Lotta fisico", cost: 1300, impact: 25 }] },
-    { name: "Froslass", owned: true, types: ["Ghiaccio", "Spettro"], role: "speed control", tags: ["speed", "ghost", "ice"], meta: 72, current: { ability: "Corpogelo", item: "", nature: "Timida", moves: ["Ventogelato", "Palla Ombra", "Provocazione", "Destinobbligato"] }, ideal: { ability: "Corpogelo", item: "Focalnastro", nature: "Timida", moves: ["Ventogelato", "Palla Ombra", "Provocazione", "Destinobbligato"], stats: { "PS": 4, "Attacco": 0, "Difesa": 0, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Lead veloce fragile: rende molto meglio con Focalnastro", cost: 700, impact: 20 }] },
-    { name: "Gardevoir", owned: true, types: ["Psico", "Folletto"], role: "attaccante speciale", tags: ["fairy", "psychic"], meta: 69, current: { ability: "Traccia", item: "", nature: "Timida", moves: ["Psichico", "Magibrillio", "Palla Ombra", "Protezione"] }, ideal: { ability: "Traccia", item: "Stolascelta", nature: "Timida", moves: ["Psichico", "Magibrillio", "Palla Ombra", "Protezione"], stats: { "PS": 4, "Attacco": 0, "Difesa": 0, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Buona ma sovrapposta a Sylveon/Zoroark come speciale", cost: 900, impact: 16 }] },
-    { name: "Kommo-o", owned: true, types: ["Drago", "Lotta"], role: "bulky", tags: ["dragon", "fighting"], meta: 73, current: { ability: "Antiproiettile", item: "", nature: "Modesta", moves: ["Clamorsquame", "Forzasfera", "Lanciafiamme", "Protezione"] }, ideal: { ability: "Antiproiettile", item: "Baccaprugna", nature: "Modesta", moves: ["Clamorsquame", "Forzasfera", "Lanciafiamme", "Protezione"], stats: { "PS": 108, "Attacco": 0, "Difesa": 0, "Attacco Speciale": 252, "Difesa Speciale": 0, "Velocità": 148 } }, upgrades: [{ text: "Alternativa drago speciale, ma compete con Dragonite", cost: 1000, impact: 18 }] },
-    { name: "Chesnaught", owned: true, types: ["Erba", "Lotta"], role: "bulky", tags: ["mega", "grass", "fighting"], meta: 68, current: { ability: "Antiproiettile", item: "", nature: "Scaltra", moves: ["Agodifesa", "Semebomba", "Assorbipugno", "Parassiseme"] }, ideal: { ability: "Antiproiettile", item: "Chesnaughtite", nature: "Scaltra", moves: ["Agodifesa", "Semebomba", "Assorbipugno", "Parassiseme"], stats: { "PS": 252, "Attacco": 4, "Difesa": 252, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 0 } }, upgrades: [{ text: "Hai la Chesnaughtite, ma il team attuale ha già Mega più impattanti", cost: 1000, impact: 14 }] },
-    { name: "Staraptor", owned: true, types: ["Normale", "Volante"], role: "attaccante fisico", tags: ["intimidate", "flying"], meta: 64, current: { ability: "Prepotenza", item: "", nature: "Allegra", moves: ["Baldeali", "Zuffa", "Retromarcia", "Attacco Rapido"] }, ideal: { ability: "Prepotenza", item: "Stolascelta", nature: "Allegra", moves: ["Baldeali", "Zuffa", "Retromarcia", "Attacco Rapido"], stats: { "PS": 4, "Attacco": 252, "Difesa": 0, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Utile, ma spesso meno prioritario di Gyarados/Dragonite", cost: 800, impact: 12 }] },
-    { name: "Gourgeist", owned: true, types: ["Spettro", "Erba"], role: "bulky", tags: ["ghost", "grass", "trickroom"], meta: 62, current: { ability: "Raccolta", item: "", nature: "Scaltra", moves: ["Fuocofatuo", "Semebomba", "Halloween", "Protezione"] }, ideal: { ability: "Indagine", item: "Avanzi", nature: "Scaltra", moves: ["Fuocofatuo", "Semebomba", "Parassiseme", "Protezione"], stats: { "PS": 252, "Attacco": 0, "Difesa": 252, "Attacco Speciale": 0, "Difesa Speciale": 4, "Velocità": 0 } }, upgrades: [{ text: "Bulky interessante, ma non prioritario con Spiritomb/Snorlax già presenti", cost: 700, impact: 10 }] },
-    { name: "Decidueye", owned: true, types: ["Erba", "Spettro"], role: "attaccante fisico", tags: ["ghost", "grass"], meta: 65, current: { ability: "Distacco", item: "", nature: "Decisa", moves: ["Cucitura d'Ombra", "Fendifoglia", "Danzaspada", "Protezione"] }, ideal: { ability: "Distacco", item: "Miracolseme", nature: "Decisa", moves: ["Cucitura d'Ombra", "Fendifoglia", "Danzaspada", "Protezione"], stats: { "PS": 4, "Attacco": 252, "Difesa": 0, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Può usare Miracolseme, ma non risolve i buchi principali", cost: 900, impact: 13 }] },
-    { name: "Machamp", owned: true, types: ["Lotta"], role: "attaccante fisico", tags: ["trickroom", "fighting"], meta: 61, current: { ability: "Nullodifesa", item: "", nature: "Audace", moves: ["Dinamipugno", "Privazione", "Pietrataglio", "Protezione"] }, ideal: { ability: "Nullodifesa", item: "Bandana", nature: "Audace", moves: ["Dinamipugno", "Privazione", "Pietrataglio", "Protezione"], stats: { "PS": 252, "Attacco": 252, "Difesa": 4, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 0 } }, upgrades: [{ text: "Ha senso solo se scegli davvero Distortozona", cost: 800, impact: 12 }] },
-    { name: "Victreebel", owned: true, types: ["Erba", "Veleno"], role: "attaccante fisico", tags: ["grass", "poison", "sun"], meta: 58, current: { ability: "Clorofilla", item: "", nature: "Decisa", moves: ["Velenpuntura", "Fendifoglia", "Privazione", "Sonnifero"] }, ideal: { ability: "Clorofilla", item: "Miracolseme", nature: "Decisa", moves: ["Velenpuntura", "Fendifoglia", "Privazione", "Sonnifero"], stats: { "PS": 4, "Attacco": 252, "Difesa": 0, "Attacco Speciale": 0, "Difesa Speciale": 0, "Velocità": 252 } }, upgrades: [{ text: "Per ora basso impatto senza core sole", cost: 600, impact: 8 }] }
+  roster: [
+    {name:"Gourgeist", owned:true, role:"Bulky fisico / Spettro-Erba", score:67},
+    {name:"Gardevoir", owned:true, role:"Attaccante speciale / Folletto-Psico", score:76},
+    {name:"Rotom Forma Vortice", owned:true, role:"Speciale bulky / Elettro-Volante", score:78},
+    {name:"Zoroark Forma di Hisui", owned:true, role:"Attaccante speciale veloce", score:82},
+    {name:"Blaziken", owned:true, role:"Attaccante fisico", score:77},
+    {name:"Staraptor", owned:true, role:"Fisico offensivo", score:69},
+    {name:"Raichu", owned:true, role:"Supporto/Elettro veloce", score:70},
+    {name:"Chesnaught", owned:true, role:"Fisico difensivo", score:72},
+    {name:"Snorlax", owned:true, role:"Bulky fisico lento", score:80},
+    {name:"Kommo-o", owned:true, role:"Drago/Lotta bulky", score:79},
+    {name:"Spiritomb", owned:true, role:"Distortozona / speciale bulky", score:74},
+    {name:"Decidueye", owned:true, role:"Fisico Erba/Spettro", score:68},
+    {name:"Machamp", owned:true, role:"Fisico lento", score:70},
+    {name:"Dragonite", owned:true, role:"Mega / attaccante misto", score:84},
+    {name:"Sylveon", owned:true, role:"Speciale Folletto", score:81},
+    {name:"Froslass", owned:true, role:"Veloce fragile / utility", score:71},
+    {name:"Lucario", owned:true, role:"Mega / setup speciale", score:83},
+    {name:"Gyarados", owned:true, role:"Fisico con Dragodanza", score:85},
+    {name:"Victreebel", owned:true, role:"Erba/Veleno utility", score:62}
   ],
-  hires: [
-    { name: "Incineroar", owned: false, types: ["Fuoco", "Buio"], role: "supporto", tags: ["intimidate", "fakeout", "pivot"], meta: 94, cost: 0, note: "Candidato esterno da inserire se disponibile/costo noto." },
-    { name: "Kingambit", owned: false, types: ["Buio", "Acciaio"], role: "attaccante fisico", tags: ["priority", "steel", "dark"], meta: 92, cost: 0, note: "Candidato meta forte, costo da confermare." },
-    { name: "Basculegion", owned: false, types: ["Acqua", "Spettro"], role: "attaccante fisico", tags: ["water", "ghost", "speed"], meta: 91, cost: 0, note: "Candidato meta, costo da confermare." },
-    { name: "Whimsicott", owned: false, types: ["Erba", "Folletto"], role: "speed control", tags: ["tailwind", "support"], meta: 88, cost: 0, note: "Candidato se serve speed control immediato." },
-    { name: "Garchomp", owned: false, types: ["Drago", "Terra"], role: "attaccante fisico", tags: ["ground", "dragon", "speed"], meta: 89, cost: 0, note: "Candidato fisico stabile." }
-  ]
+  items: ["Erbachiara","Stolascelta","Miracolseme","Bandana","Focalnastro","Avanzi","Baccaprugna","Baccacedro","Raichuite X","Raichuite Y","Dragonitite","Lucarite","Chesnaughtite","Luminpolvere","Rapidartiglio","Roccia di re"],
+  recruits: [
+    {name:"Incineroar", cost:3000, score:92, note:"Supporto fisico, pivot, ottima utilità teorica"},
+    {name:"Amoonguss", cost:2800, score:90, note:"Supporto, controllo ritmo, ottimo in team bulky"},
+    {name:"Flutter Mane", cost:4000, score:94, note:"Attaccante speciale velocissimo se disponibile"},
+    {name:"Ursaluna", cost:3500, score:89, note:"Abusatore Distortozona con pressione fisica"},
+    {name:"Tornadus", cost:3800, score:91, note:"Speed control offensivo se disponibile"}
+  ],
+  notes: "Dati iniziali ricavati da video/screenshot: Squadra 1, box 19/30, oggetti e 8.366 PV."
 };
 
-const STORAGE_KEY = "champions-manager-data-v07";
-let data = loadData();
-let deferredInstallPrompt = null;
+let state = loadData();
 
-const $ = (id) => document.getElementById(id);
-const clone = (obj) => JSON.parse(JSON.stringify(obj));
+const tabs = [
+  ["home","Home"],["team","Team"],["rosa","Rosa"],["oggetti","Oggetti"],["ingaggi","Ingaggi"],["dati","Dati"]
+];
 
-function loadData() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : clone(DEFAULT_DATA);
-  } catch {
-    return clone(DEFAULT_DATA);
-  }
+function deepClone(x){return JSON.parse(JSON.stringify(x));}
+function loadData(){
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || deepClone(defaultData); }
+  catch(e){ return deepClone(defaultData); }
 }
-
-function normalizeImportedData(raw) {
-  if (!raw || typeof raw !== "object") throw new Error("JSON vuoto o non valido");
-  const base = clone(DEFAULT_DATA);
-  const out = {...base, ...raw};
-  out.version = raw.version || "importato";
-  out.pv = Number(raw.pv ?? base.pv ?? 0);
-  out.language = raw.language || "it";
-  out.currentTeam = Array.isArray(raw.currentTeam) ? raw.currentTeam : base.currentTeam;
-  out.items = Array.isArray(raw.items) ? raw.items.map(i => ({name:String(i.name||""), category:i.category||"Altro", qty:Number(i.qty ?? 1)})).filter(i=>i.name) : base.items;
-  out.pokemon = Array.isArray(raw.pokemon) ? raw.pokemon.map(p => ({...p, name:String(p.name||""), owned:Boolean(p.owned), types:Array.isArray(p.types)?p.types:[], tags:Array.isArray(p.tags)?p.tags:[], current:p.current||{}, ideal:p.ideal||{}, upgrades:Array.isArray(p.upgrades)?p.upgrades:[]})).filter(p=>p.name) : base.pokemon;
-  out.hires = Array.isArray(raw.hires) ? raw.hires.map(h => ({...h, name:String(h.name||""), owned:Boolean(h.owned), types:Array.isArray(h.types)?h.types:[], tags:Array.isArray(h.tags)?h.tags:[], role:h.role||"da definire", meta:Number(h.meta||70), cost:Number(h.cost||0), note:h.note||""})).filter(h=>h.name) : base.hires;
+function saveData(){
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  render();
+}
+function normalizeImported(obj){
+  const d = deepClone(defaultData);
+  const out = {...d, ...obj};
+  if (obj.pvDisponibili && !obj.pv) out.pv = obj.pvDisponibili;
+  if (obj.squadraAttuale && !obj.currentTeam) out.currentTeam = obj.squadraAttuale;
+  if (Array.isArray(obj.boxAttuale) && !obj.roster) out.roster = obj.boxAttuale.map(name => typeof name === "string" ? ({name, owned:true, role:"Da classificare", score:65}) : name);
+  if (Array.isArray(obj.oggettiDisponibili) && !obj.items) out.items = obj.oggettiDisponibili;
+  if (obj.oggettiAssegnati && !obj.assignedItems) out.assignedItems = obj.oggettiAssegnati;
+  out.roster = Array.isArray(out.roster) ? out.roster.map(p => typeof p === "string" ? ({name:p, owned:true, role:"Da classificare", score:65}) : {...p, owned:p.owned!==false, score:Number(p.score||65)}) : d.roster;
+  out.items = Array.isArray(out.items) ? out.items : d.items;
+  out.currentTeam = Array.isArray(out.currentTeam) ? out.currentTeam : d.currentTeam;
+  out.recruits = Array.isArray(out.recruits) ? out.recruits : d.recruits;
+  out.assignedItems = out.assignedItems || {};
+  out.pv = Number(out.pv || 0);
   return out;
 }
-function setImportStatus(message, ok=true) {
-  const el = $("importStatus");
-  if (!el) return;
-  el.classList.remove("hidden");
-  el.innerHTML = message;
-  el.style.borderLeftColor = ok ? "var(--primary2)" : "#ff5d7a";
-}
-function applyImportedData(raw, source="JSON") {
-  data = normalizeImportedData(raw);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  renderAll();
-  setImportStatus(`Import ${source} riuscito: <b>${data.pv}</b> PV · <b>${ownedPokemon().length}</b> Pokémon posseduti · <b>${(data.items||[]).length}</b> strumenti.`);
-  goToScreen("home");
-}
-function saveData() {
-  data.updatedAt = new Date().toISOString().slice(0, 10);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  renderAll();
-}
-function itemQty(name) {
-  return (data.items.find(i => i.name.toLowerCase() === String(name).toLowerCase()) || {}).qty || 0;
-}
-function hasItem(name) { return !name || itemQty(name) > 0; }
-function ownedPokemon() { return data.pokemon.filter(p => p.owned); }
-function candidatePool(mode) {
-  const base = ownedPokemon().map(p => ({...p, isHire:false, hireCost:0}));
-  if (mode === "owned") return base;
-  const hires = data.hires.map(h => ({
-    name:h.name, owned:false, types:h.types || [], role:h.role || "jolly", tags:h.tags || [], meta:h.meta || 70,
-    isHire:true, hireCost:Number(h.cost || 0), note:h.note || "",
-    current:{}, ideal:{ item:"", ability:"", nature:"Da definire", moves:[], stats:{} },
-    upgrades:[{text:`Ingaggiare ${h.name} se il costo reale è sostenibile`, cost:Number(h.cost || 0), impact:Math.round((h.meta || 70)/3)}]
-  }));
-  return base.concat(hires);
-}
 
-function scoreMon(mon, style, mode) {
-  let s = Number(mon.meta || 50);
-  const tags = mon.tags || [];
-  const role = mon.role || "";
-  if (mon.isHire) {
-    if (mon.hireCost <= 0) s -= 8; // costo non confermato
-    else s -= Math.min(18, mon.hireCost / 650);
-  }
-  if (mon.ideal?.item && hasItem(mon.ideal.item)) s += 5;
-  if (data.currentTeam.includes(mon.name)) s += 3;
-  if (style === "offense" && (role.includes("attaccante") || tags.includes("setup"))) s += 8;
-  if (style === "bulky" && (role.includes("bulky") || role.includes("supporto") || tags.includes("tank"))) s += 8;
-  if (style === "trickroom" && tags.includes("trickroom")) s += 13;
-  if (style === "balanced" && role.includes("supporto")) s += 3;
-  if (mode === "save" && mon.isHire) s -= 12;
-  if (mode === "push" && mon.meta >= 88) s += 10;
-  return s;
+function go(id){
+  location.hash = id;
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === id));
+  document.querySelectorAll("[data-tab]").forEach(a => a.classList.toggle("active", a.dataset.tab === id));
 }
-function comboScore(team, style, mode) {
-  let score = team.reduce((a,m)=>a + scoreMon(m, style, mode), 0);
-  const roles = new Set(team.map(m => (m.role || "").split(" ")[0]));
-  const types = new Set(team.flatMap(m => m.types || []));
-  score += Math.min(30, roles.size * 5);
-  score += Math.min(25, types.size * 2);
-  const supportCount = team.filter(m => (m.role || "").includes("supporto") || (m.role || "").includes("speed control")).length;
-  const phys = team.filter(m => (m.role || "").includes("fisico")).length;
-  const spec = team.filter(m => (m.role || "").includes("speciale")).length;
-  const bulky = team.filter(m => (m.role || "").includes("bulky") || (m.tags||[]).includes("tank")).length;
-  if (supportCount >= 1) score += 10;
-  if (phys >= 1 && spec >= 1) score += 12;
-  if (bulky >= 1) score += 6;
-  const megaCount = team.filter(m => (m.tags||[]).includes("mega") || /ite$|ite\s/.test(m.ideal?.item || m.current?.item || "")).length;
-  if (megaCount > 2) score -= (megaCount - 2) * 10;
-  if (style === "trickroom") {
-    const tr = team.filter(m => (m.tags||[]).includes("trickroom")).length;
-    score += tr * 8;
-    if (tr < 2) score -= 18;
-  }
-  const hireCost = team.reduce((a,m)=>a + Number(m.hireCost || 0), 0);
-  if (hireCost > Number(data.pv || 0)) score -= 9999;
-  return score;
-}
-function combinations(arr, k, start=0, prefix=[], out=[]) {
-  if (prefix.length === k) { out.push(prefix); return out; }
-  for (let i=start; i<=arr.length-(k-prefix.length); i++) combinations(arr,k,i+1,prefix.concat(arr[i]),out);
-  return out;
-}
-function optimize(mode="theory", style="balanced") {
-  const pool = candidatePool(mode);
-  const filtered = pool.filter(p => p.owned || mode !== "owned");
-  const topPool = filtered.sort((a,b)=>scoreMon(b,style,mode)-scoreMon(a,style,mode)).slice(0, 28);
-  let best = null;
-  for (const team of combinations(topPool, 6)) {
-    const score = comboScore(team, style, mode);
-    if (!best || score > best.score) best = {team, score};
-  }
-  return best || {team:[], score:0};
-}
-function makePlan(team, mode) {
-  const pv = Number(data.pv || 0);
-  const actions = [];
-  let spent = 0;
-  for (const mon of team) {
-    if (mon.isHire && mon.hireCost > 0) actions.push({who:mon.name, text:`Ingaggia ${mon.name}`, cost:mon.hireCost, impact:Math.round(mon.meta/2)});
-    if (mon.ideal?.item && !hasItem(mon.ideal.item)) actions.push({who:mon.name, text:`Recupera/compra ${mon.ideal.item}`, cost:0, impact:12});
-    (mon.upgrades || []).forEach(u => actions.push({who:mon.name, text:u.text, cost:Number(u.cost||0), impact:Number(u.impact||0)}));
-  }
-  actions.sort((a,b)=>((b.impact+1)/(b.cost+250))-((a.impact+1)/(a.cost+250)));
-  return actions.map(a => {
-    const affordable = spent + a.cost <= pv;
-    if (affordable) spent += a.cost;
-    return {...a, affordable, runningSpent: spent};
-  }).slice(0, 10);
-}
-function nextActionText() {
-  const best = optimize("theory", "balanced");
-  const plan = makePlan(best.team, "theory");
-  const first = plan.find(p => p.affordable) || plan[0];
-  if (!first) return "Aggiungi dati o premi ricalcola.";
-  return `<strong>${first.who}</strong>: ${first.text}<br><small>Costo stimato: ${first.cost} PV · Priorità ${first.impact}/40</small>`;
-}
+function initNav(){
+  const top = document.getElementById("tabsTop");
+  const bottom = document.getElementById("bottomNav");
+  top.innerHTML = "";
+  bottom.innerHTML = "";
+  for (const [id,label] of tabs){
+    const b = document.createElement("button");
+    b.className = "tabBtn";
+    b.dataset.tab = id;
+    b.textContent = label;
+    b.onclick = () => go(id);
+    top.appendChild(b);
 
-function renderAll() {
-  try {
-    $("pvInput").value = data.pv;
-    $("boxCount").textContent = `${ownedPokemon().length}/30`;
-    $("itemCount").textContent = (data.items || []).reduce((a,i)=>a+Number(i.qty||0),0);
-    $("nextAction").innerHTML = nextActionText();
-    renderQuickTeam(); renderRoster(); renderItems(); renderHires(); renderJson();
-  } catch (err) {
-    console.error("Errore render:", err);
-    alert("Ho trovato un dato non valido. Vai in Dati e premi Ripristina dati iniziali, oppure importa un JSON valido.");
+    const a = document.createElement("a");
+    a.href = "#" + id;
+    a.dataset.tab = id;
+    a.textContent = label;
+    a.addEventListener("click", (ev)=>{ ev.preventDefault(); go(id); history.replaceState(null,"","#"+id); });
+    bottom.appendChild(a);
   }
 }
-function renderQuickTeam() {
-  const best = optimize("theory", "balanced").team;
-  $("quickTeam").innerHTML = best.map(m => `<span>${m.name}${m.isHire ? "*" : ""}</span>`).join("");
+window.addEventListener("hashchange", () => go((location.hash||"#home").slice(1)));
+
+function render(){
+  document.getElementById("pvView").textContent = Number(state.pv||0).toLocaleString("it-IT");
+  document.getElementById("ownedCount").textContent = state.roster.filter(p=>p.owned!==false).length;
+  document.getElementById("itemCount").textContent = state.items.length;
+  document.getElementById("currentTeamPills").innerHTML = state.currentTeam.map(n => `<span class="pill good">${n}${state.assignedItems[n] ? " · " + state.assignedItems[n] : ""}</span>`).join("");
+  document.getElementById("rosterList").innerHTML = renderRoster();
+  document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${x}</span>`).join("");
+  document.getElementById("recruitsList").innerHTML = renderRecruits();
 }
-function renderTeamResult(best, mode) {
-  const hireCost = best.team.reduce((a,m)=>a+Number(m.hireCost||0),0);
-  $("optimizerSummary").innerHTML = `Punteggio euristico: <strong>${Math.round(best.score)}</strong> · Costo ingaggi noto: <strong>${hireCost} PV</strong> · Budget: <strong>${data.pv} PV</strong>`;
-  $("teamCards").innerHTML = best.team.map(m => {
-    const item = m.ideal?.item || m.current?.item || "da scegliere";
-    const moves = (m.ideal?.moves || m.current?.moves || []).slice(0,4).join(" · ") || "mosse da definire";
-    const stats = m.ideal?.stats ? Object.entries(m.ideal.stats).filter(([,v])=>v>0).map(([k,v])=>`${k} ${v}`).join(" / ") : "spread da definire";
-    return `<article class="poke-card ${m.isHire?'hire':''}">
-      <header><strong>${m.name}</strong><em>${m.role || "ruolo"}</em></header>
-      <p>${(m.types||[]).join(" / ")}</p>
-      <p><b>Oggetto:</b> ${item}${hasItem(item) ? "" : " <span class='warn'>(manca)</span>"}</p>
-      <p><b>Natura:</b> ${m.ideal?.nature || "da definire"}</p>
-      <p><b>Mosse:</b> ${moves}</p>
-      <p><b>Statistiche:</b> ${stats}</p>
-      ${m.isHire ? `<p class="warn">Ingaggio candidato · costo: ${m.hireCost || "da inserire"} PV</p>` : ""}
-    </article>`;
-  }).join("");
-  const plan = makePlan(best.team, mode);
-  $("planList").innerHTML = plan.map(p => `<li class="${p.affordable?'':'locked'}"><span>${p.who}</span><b>${p.cost} PV</b><br>${p.text}${p.affordable ? "" : "<small> · fuori budget se fatto ora</small>"}</li>`).join("");
+function renderRoster(){
+  const rows = state.roster.map(p => `<tr><td><b>${p.name}</b></td><td>${p.role||"Da classificare"}</td><td>${p.score||65}</td><td>${state.assignedItems[p.name]||"—"}</td></tr>`).join("");
+  return `<table><thead><tr><th>Pokémon</th><th>Ruolo</th><th>Score</th><th>Oggetto</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
-function renderRoster() {
-  const q = ($("pokemonSearch").value || "").toLowerCase();
-  $("rosterList").innerHTML = data.pokemon.filter(p => p.name.toLowerCase().includes(q)).map(p => `
-    <div class="row-card">
-      <div><strong>${p.name}</strong><small>${(p.types||[]).join(" / ")} · ${p.role}</small></div>
-      <label class="switch"><input type="checkbox" ${p.owned?'checked':''} data-own="${p.name}"><span></span></label>
-    </div>`).join("");
-  document.querySelectorAll("[data-own]").forEach(el => el.onchange = () => {
-    const mon = data.pokemon.find(p => p.name === el.dataset.own); if (mon) mon.owned = el.checked; saveData();
-  });
+function renderRecruits(){
+  const rows = state.recruits.map(p => `<tr><td><b>${p.name}</b></td><td>${p.cost} PV</td><td>${p.score}</td><td>${p.note}</td></tr>`).join("");
+  return `<table><thead><tr><th>Pokémon</th><th>Costo stimato</th><th>Score</th><th>Nota</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
-function renderItems() {
-  const grouped = {};
-  data.items.forEach(i => { (grouped[i.category || "Altro"] ||= []).push(i); });
-  $("itemsList").innerHTML = Object.entries(grouped).map(([cat, items]) => `
-    <h3>${cat}</h3>${items.map(i => `<div class="row-card"><div><strong>${i.name}</strong><small>Quantità: ${i.qty}</small></div><div class="qty"><button data-dec="${i.name}">−</button><button data-inc="${i.name}">+</button></div></div>`).join("")}
-  `).join("");
-  document.querySelectorAll("[data-inc]").forEach(b => b.onclick = () => { const it=data.items.find(i=>i.name===b.dataset.inc); it.qty++; saveData(); });
-  document.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { const it=data.items.find(i=>i.name===b.dataset.dec); it.qty=Math.max(0,it.qty-1); saveData(); });
+function optimize(mode){
+  let pool = state.roster.filter(p=>p.owned!==false).map(p=>({...p, source:"box", netScore:Number(p.score||65)}));
+  let budget = Number(state.pv||0);
+  if (mode === "theory"){
+    for (const r of state.recruits){
+      if (Number(r.cost||999999) <= budget) pool.push({...r, role:"Ingaggio teorico", source:"ingaggio", netScore:Number(r.score||65) - Math.round(Number(r.cost||0)/1600)});
+    }
+  }
+  const namesPenalty = new Set();
+  const team = pool
+    .filter(p => !namesPenalty.has(p.name) && namesPenalty.add(p.name))
+    .sort((a,b)=>b.netScore-a.netScore)
+    .slice(0,6);
+  const html = `<div class="notice"><b>${mode==="theory"?"Team teorico con ingaggi":"Team con risorse attuali"}</b><br>${team.map(p=>`${p.name}${p.source==="ingaggio"?" (ingaggio)":""}`).join(" · ")}</div>
+  <table><thead><tr><th>Pokémon</th><th>Fonte</th><th>Ruolo</th><th>Score</th></tr></thead><tbody>
+  ${team.map(p=>`<tr><td><b>${p.name}</b></td><td>${p.source}</td><td>${p.role||p.note||"—"}</td><td>${p.netScore}</td></tr>`).join("")}
+  </tbody></table>
+  <div class="notice"><b>Priorità provvisoria:</b> valutare Gyarados, Zoroark Hisui e Rotom Vortice come alternative concrete a Raichu/Spiritomb; rivedere Rapidartiglio su Sylveon; confermare se Dragonite resta speciale o passa fisico.</div>`;
+  document.getElementById("teamResult").innerHTML = html;
+  document.getElementById("quickResult").innerHTML = html;
+  go("team");
 }
-function renderHires() {
-  $("hireList").innerHTML = data.hires.map((h, idx) => `<div class="row-card"><div><strong>${h.name}</strong><small>${h.role} · costo ${h.cost || "?"} PV · meta ${h.meta || "?"}</small></div><button data-delhire="${idx}" class="small danger">Elimina</button></div>`).join("");
-  document.querySelectorAll("[data-delhire]").forEach(b => b.onclick = () => { data.hires.splice(Number(b.dataset.delhire),1); saveData(); });
+function addPokemon(){
+  const input = document.getElementById("newPokemonName");
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.roster.some(p=>p.name.toLowerCase()===name.toLowerCase())) state.roster.push({name, owned:true, role:"Aggiunto manualmente", score:65});
+  input.value = "";
+  saveData();
 }
-function renderJson() { $("jsonEditor").value = JSON.stringify(data, null, 2); }
-function exportAI() {
-  const best = optimize($("calcMode").value, $("teamStyle").value);
-  const payload = {
-    richiesta: "Aggiorna e migliora il mio gestore Pokémon Champions: usa nomi italiani ufficiali, valuta miglior team teorico con risorse attuali e PV.",
-    dati: data,
-    risultatoApp: { teamSuggerito: best.team.map(m=>m.name), piano: makePlan(best.team, $("calcMode").value) }
+function addItem(){
+  const input = document.getElementById("newItemName");
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.items.some(x=>x.toLowerCase()===name.toLowerCase())) state.items.push(name);
+  input.value = "";
+  saveData();
+}
+function importFromFile(){
+  const file = document.getElementById("jsonFile").files[0];
+  if (!file){ statusMsg("Seleziona prima un file JSON.", true); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      state = normalizeImported(JSON.parse(reader.result));
+      saveData();
+      document.getElementById("jsonFile").value = "";
+      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti.`);
+      go("home");
+    }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
   };
-  $("jsonEditor").value = JSON.stringify(payload, null, 2);
-  navigator.clipboard?.writeText($("jsonEditor").value).catch(()=>{});
-  alert("Richiesta IA generata e copiata negli appunti se consentito dal browser.");
+  reader.readAsText(file);
 }
-function download(filename, text) {
-  const blob = new Blob([text], {type:"application/json"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href);
+function importFromText(){
+  try{
+    const txt = document.getElementById("jsonBox").value.trim();
+    if (!txt){ statusMsg("Incolla prima un JSON.", true); return; }
+    state = normalizeImported(JSON.parse(txt));
+    saveData();
+    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti.`);
+    go("home");
+  }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
 }
-
-// Events
-window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredInstallPrompt = e; $("installBtn").classList.remove("hidden"); });
-$("installBtn").onclick = async () => { if (deferredInstallPrompt) deferredInstallPrompt.prompt(); };
-function goToScreen(screenId) {
-  const target = document.getElementById(screenId);
-  if (!target) return;
-  document.querySelectorAll(".bottom-nav a").forEach(b => b.classList.toggle("active", b.dataset.screen === screenId));
-  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === screenId));
-  window.scrollTo({ top: 0, behavior: "smooth" });
+function exportJson(){
+  const txt = JSON.stringify(state,null,2);
+  document.getElementById("jsonBox").value = txt;
+  const blob = new Blob([txt], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "champions-manager-dati-export-v08.json";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  statusMsg("Export generato.");
+  go("dati");
 }
-
-// Navigazione v0.6: usa funzione globale showPage, bottoni reali e nessun link fragile.
-function goToScreen(screenId) { window.showPage(screenId); }
-function screenFromHash() {
-  const id = (location.hash || "#home").replace("#", "");
-  return document.getElementById(id) ? id : "home";
+async function copyJson(){
+  const txt = JSON.stringify(state,null,2);
+  document.getElementById("jsonBox").value = txt;
+  try{ await navigator.clipboard.writeText(txt); statusMsg("JSON copiato negli appunti."); }
+  catch(e){ statusMsg("JSON mostrato nel riquadro: copia manualmente.", true); }
 }
-function syncScreenFromHash() { goToScreen(screenFromHash()); }
-document.querySelectorAll("[data-screen]").forEach(btn => {
-  const open = (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    goToScreen(btn.dataset.screen);
-  };
-  btn.addEventListener("click", open);
-  btn.addEventListener("pointerup", open);
-  btn.addEventListener("touchend", open, {passive:false});
-});
-window.addEventListener("hashchange", syncScreenFromHash);
-$("pvInput").onchange = () => { data.pv = Number($("pvInput").value || 0); saveData(); };
-$("recalcHome").onclick = renderAll;
-$("optimizeBtn").onclick = () => renderTeamResult(optimize($("calcMode").value, $("teamStyle").value), $("calcMode").value);
-$("pokemonSearch").oninput = renderRoster;
-$("addPokemonBtn").onclick = () => {
-  const name = $("pokemonSearch").value.trim(); if (!name) return;
-  let mon = data.pokemon.find(p => p.name.toLowerCase() === name.toLowerCase());
-  if (mon) mon.owned = true;
-  else data.pokemon.push({name, owned:true, types:[], role:"da definire", tags:[], meta:50, current:{}, ideal:{moves:[],stats:{}}, upgrades:[]});
-  $("pokemonSearch").value = ""; saveData();
-};
-$("addItemBtn").onclick = () => {
-  const name = $("itemName").value.trim(); if (!name) return;
-  let item = data.items.find(i => i.name.toLowerCase() === name.toLowerCase());
-  if (item) item.qty++; else data.items.push({name, category:"Altro", qty:1});
-  $("itemName").value = ""; saveData();
-};
-$("addHireBtn").onclick = () => {
-  const name = $("hireName").value.trim(); if (!name) return;
-  data.hires.push({name, owned:false, types:[], role:$("hireRole").value, tags:[], meta:70, cost:Number($("hireCost").value||0), note:"Inserito manualmente"});
-  $("hireName").value=""; $("hireCost").value=""; saveData();
-};
-$("exportAiBtn").onclick = exportAI;
-$("downloadJsonBtn").onclick = () => download("champions-manager-dati.json", JSON.stringify(data, null, 2));
-$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { ["champions-manager-data-v02","champions-manager-data-v03","champions-manager-data-v05","champions-manager-data-v06","champions-manager-data-v07"].forEach(k=>localStorage.removeItem(k)); data = clone(DEFAULT_DATA); saveData(); setImportStatus("Dati iniziali ripristinati."); } };
-$("jsonEditor").onchange = () => { try { applyImportedData(JSON.parse($("jsonEditor").value), "editor"); } catch (err) { console.error(err); alert("JSON non valido"); setImportStatus("JSON editor non valido.", false); } };
-$("applyJsonBtn").onclick = () => { try { applyImportedData(JSON.parse($("jsonEditor").value), "incollato"); } catch (err) { console.error(err); alert("JSON non valido"); setImportStatus("JSON incollato non valido.", false); } };
-$("importJson").addEventListener("change", async (ev) => {
-  const file = ev.target.files && ev.target.files[0]; if (!file) return;
-  try { applyImportedData(JSON.parse(await file.text()), file.name); }
-  catch (err) { console.error(err); alert("File JSON non valido o schema non riconosciuto"); setImportStatus("File JSON non valido o schema non riconosciuto.", false); }
-  finally { ev.target.value = ""; }
-});
-renderAll();
-syncScreenFromHash();
-
-  </script>
-
+function resetData(){
+  if (!confirm("Resetto i dati locali v0.8 e torno ai dati iniziali?")) return;
+  state = deepClone(defaultData);
+  saveData();
+  statusMsg("Reset completato.");
+}
+function statusMsg(msg, err=false){
+  const el = document.getElementById("importStatus");
+  el.className = err ? "dangerBox" : "notice";
+  el.textContent = msg;
+}
+async function killOldServiceWorkers(){
+  let report = [];
+  if ("serviceWorker" in navigator){
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (const r of regs){ await r.unregister(); report.push("SW rimosso"); }
+  }
+  if ("caches" in window){
+    const keys = await caches.keys();
+    for (const k of keys){ await caches.delete(k); report.push("cache " + k + " eliminata"); }
+  }
+  document.getElementById("cacheStatus").textContent = report.length ? report.join(" · ") + " · ricarica la pagina." : "Nessun service worker/cache trovato.";
+}
+(function boot(){
+  initNav();
+  render();
+  go((location.hash||"#home").slice(1));
+  // Tentativo automatico soft: disattiva vecchi service worker senza bloccare l'app.
+  if ("serviceWorker" in navigator){
+    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(()=>{});
+  }
+})();
+</script>
 </body>
 </html>

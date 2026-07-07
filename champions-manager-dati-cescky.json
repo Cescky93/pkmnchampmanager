@@ -1,0 +1,938 @@
+{
+  "version": "v1.0-meta-build-advisor",
+  "pv": 8366,
+  "currentTeam": [
+    "Lucario",
+    "Annihilape",
+    "Sylveon",
+    "Dragonite",
+    "Snorlax",
+    "Spiritomb"
+  ],
+  "assignedItems": {
+    "Lucario": "Lucarite",
+    "Annihilape": "",
+    "Spiritomb": "Baccacedro",
+    "Sylveon": "Rapidartiglio",
+    "Dragonite": "Dragonitite",
+    "Snorlax": "Avanzi",
+    "Raichu": "Raichuite Y"
+  },
+  "battlePlans": {
+    "singlesSelections": [
+      {
+        "id": "singles_advisor_v10",
+        "name": "Advisor Singolo 3v3",
+        "selectedPokemon": [
+          "Annihilape",
+          "Gyarados",
+          "Dragonite"
+        ],
+        "lead": "Annihilape",
+        "notes": "Trio offensivo/bulky consigliato dopo l'ingaggio di Annihilape. Alternative: Lucario o Sylveon in base al matchup."
+      }
+    ],
+    "doublesPlans": [
+      {
+        "id": "doubles_advisor_v10",
+        "name": "Advisor Doppio",
+        "leadPair": [
+          "Annihilape",
+          "Sylveon"
+        ],
+        "backups": [
+          "Rotom Forma Vortice",
+          "Snorlax",
+          "Spiritomb",
+          "Dragonite"
+        ],
+        "notes": "Lead semplice da provare: Annihilape mette pressione fisica, Sylveon pressione speciale spread. Piano alternativo: Spiritomb + Snorlax per Distortozona."
+      }
+    ]
+  },
+  "roster": [
+    {
+      "name": "Gourgeist",
+      "owned": true,
+      "role": "Bulky fisico / Spettro-Erba",
+      "score": 67,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Gardevoir",
+      "owned": true,
+      "role": "Attaccante speciale / Folletto-Psico",
+      "score": 76,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Rotom Forma Vortice",
+      "owned": true,
+      "role": "Speciale bulky / Elettro-Volante",
+      "score": 78,
+      "builds": {
+        "singles": {
+          "item": "Baccacedro / Avanzi",
+          "ability": "Levitazione",
+          "nature": "Modesta / Calma",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco Speciale + Difesa Speciale",
+          "moves": [
+            "Fulmine",
+            "mossa Volante",
+            "Invertivolt",
+            "Protezione / Tuononda"
+          ],
+          "roles": [
+            "pivot speciale",
+            "utility"
+          ],
+          "notes": "Alternativa più stabile di Raichu."
+        },
+        "doubles": {
+          "item": "Baccacedro",
+          "ability": "Levitazione",
+          "nature": "Modesta / Calma",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco Speciale",
+          "moves": [
+            "Protezione",
+            "Fulmine",
+            "Invertivolt",
+            "Tuononda / mossa Volante"
+          ],
+          "roles": [
+            "pivot",
+            "speed control",
+            "immunità Terra"
+          ],
+          "notes": "Buon collante in Doppio."
+        }
+      },
+      "formatScores": {
+        "singles": 82,
+        "doubles": 86
+      },
+      "ability": "Levitazione"
+    },
+    {
+      "name": "Zoroark Forma di Hisui",
+      "owned": true,
+      "role": "Attaccante speciale veloce",
+      "score": 82,
+      "builds": {
+        "singles": {
+          "item": "Focalnastro / Stolascelta",
+          "ability": "Illusione",
+          "nature": "Timida / Modesta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco Speciale + Velocità",
+          "moves": [
+            "Palla Ombra",
+            "Ipervoce",
+            "Congiura",
+            "Lanciafiamme / Focalcolpo"
+          ],
+          "roles": [
+            "speciale veloce",
+            "anti-psico/spettro"
+          ],
+          "notes": "Ottimo in Singolo come pressione speciale veloce."
+        },
+        "doubles": {
+          "item": "Focalnastro",
+          "ability": "Illusione",
+          "nature": "Timida",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco Speciale + Velocità",
+          "moves": [
+            "Protezione",
+            "Palla Ombra",
+            "Ipervoce",
+            "Provocazione"
+          ],
+          "roles": [
+            "attaccante speciale",
+            "utility fragile"
+          ],
+          "notes": "In Doppio è fragile: va protetto."
+        }
+      },
+      "formatScores": {
+        "singles": 86,
+        "doubles": 78
+      },
+      "ability": "Illusione"
+    },
+    {
+      "name": "Blaziken",
+      "owned": true,
+      "role": "Attaccante fisico",
+      "score": 77,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Staraptor",
+      "owned": true,
+      "role": "Fisico offensivo",
+      "score": 69,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Raichu",
+      "owned": true,
+      "role": "Supporto/Elettro veloce",
+      "score": 70,
+      "builds": {
+        "singles": {
+          "item": "Raichuite Y / Focalnastro",
+          "ability": "Parafulmine",
+          "nature": "Allegra / Ingenua",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Velocità + Attacco",
+          "moves": [
+            "Fulmine / Elettrotuffo",
+            "Assorbipugno",
+            "Apripista",
+            "Protezione"
+          ],
+          "roles": [
+            "veloce utility"
+          ],
+          "notes": "Con Elettrocannone è troppo instabile: primo candidato a uscire."
+        },
+        "doubles": {
+          "item": "Raichuite Y / Focalnastro",
+          "ability": "Parafulmine",
+          "nature": "Allegra",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Velocità + PS",
+          "moves": [
+            "Bruciapelo se disponibile",
+            "Protezione",
+            "Fulmine",
+            "Elettrotela / Apripista"
+          ],
+          "roles": [
+            "supporto elettro",
+            "redirection elettro"
+          ],
+          "notes": "Ha senso solo se sfrutti Parafulmine/supporto."
+        }
+      },
+      "formatScores": {
+        "singles": 66,
+        "doubles": 74
+      },
+      "ability": "Parafulmine"
+    },
+    {
+      "name": "Chesnaught",
+      "owned": true,
+      "role": "Fisico difensivo",
+      "score": 72,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Snorlax",
+      "owned": true,
+      "role": "Bulky fisico lento",
+      "score": 80,
+      "builds": {
+        "singles": {
+          "item": "Avanzi",
+          "ability": "Grassospesso",
+          "nature": "Cauta / Decisa",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco + Difesa Speciale",
+          "moves": [
+            "Corposcontro",
+            "Terremoto",
+            "Sbadiglio",
+            "Protezione / Maledizione"
+          ],
+          "roles": [
+            "bulky",
+            "status pressure"
+          ],
+          "notes": "Buono, ma soffre se resta troppo passivo."
+        },
+        "doubles": {
+          "item": "Avanzi / Baccacedro",
+          "ability": "Grassospesso",
+          "nature": "Decisa / Cauta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco + Difesa Speciale",
+          "moves": [
+            "Corposcontro",
+            "Pesobomba",
+            "Protezione",
+            "Sbadiglio"
+          ],
+          "roles": [
+            "bulky attacker",
+            "trick room abuser"
+          ],
+          "notes": "Interessante se Spiritomb piazza Distortozona."
+        }
+      },
+      "formatScores": {
+        "singles": 80,
+        "doubles": 84
+      },
+      "ability": "Grassospesso"
+    },
+    {
+      "name": "Kommo-o",
+      "owned": true,
+      "role": "Drago/Lotta bulky",
+      "score": 79,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Spiritomb",
+      "owned": true,
+      "role": "Distortozona / speciale bulky",
+      "score": 74,
+      "builds": {
+        "singles": {
+          "item": "Baccacedro",
+          "ability": "Intrapasso",
+          "nature": "Calma / Modesta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco Speciale + Difesa Speciale",
+          "moves": [
+            "Palla Ombra",
+            "Congiura",
+            "Provocazione",
+            "Fuocofatuo / Psichico"
+          ],
+          "roles": [
+            "bulky speciale",
+            "anti-setup"
+          ],
+          "notes": "In Singolo non è sempre nei migliori 3."
+        },
+        "doubles": {
+          "item": "Baccacedro / Focalnastro",
+          "ability": "Intrapasso",
+          "nature": "Calma / Sicura",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Difese",
+          "moves": [
+            "Distortozona",
+            "Palla Ombra",
+            "Provocazione",
+            "Protezione"
+          ],
+          "roles": [
+            "setter Distortozona",
+            "supporto"
+          ],
+          "notes": "Ha senso se giochi Snorlax/Annihilape bulky."
+        }
+      },
+      "formatScores": {
+        "singles": 75,
+        "doubles": 83
+      },
+      "ability": "Intrapasso"
+    },
+    {
+      "name": "Decidueye",
+      "owned": true,
+      "role": "Fisico Erba/Spettro",
+      "score": 68,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Machamp",
+      "owned": true,
+      "role": "Fisico lento",
+      "score": 70,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Dragonite",
+      "owned": true,
+      "role": "Mega / attaccante misto",
+      "score": 84,
+      "builds": {
+        "singles": {
+          "item": "Dragonitite",
+          "ability": "Multisquame",
+          "nature": "Decisa / Allegra se fisico; Modesta se speciale",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco o Attacco Speciale + Velocità",
+          "moves": [
+            "Dragodanza",
+            "Dragartigli / Oltraggio",
+            "Terremoto",
+            "Extrarapido"
+          ],
+          "roles": [
+            "sweeper",
+            "priority",
+            "mega"
+          ],
+          "notes": "Build fisica con setup più lineare per Singolo."
+        },
+        "doubles": {
+          "item": "Dragonitite / Baccaprugna",
+          "ability": "Multisquame",
+          "nature": "Decisa / Allegra",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco + Velocità",
+          "moves": [
+            "Protezione",
+            "Extrarapido",
+            "Dragartigli",
+            "Fuocopugno / Terremoto"
+          ],
+          "roles": [
+            "attaccante fisico",
+            "priority"
+          ],
+          "notes": "In Doppio Protezione pesa molto."
+        }
+      },
+      "formatScores": {
+        "singles": 89,
+        "doubles": 82
+      },
+      "ability": "Multisquame"
+    },
+    {
+      "name": "Sylveon",
+      "owned": true,
+      "role": "Speciale Folletto",
+      "score": 81,
+      "builds": {
+        "singles": {
+          "item": "Avanzi / Baccacedro / Stolascelta",
+          "ability": "Pellefolletto",
+          "nature": "Modesta / Sicura",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco Speciale + Difesa",
+          "moves": [
+            "Granvoce",
+            "Palla Ombra",
+            "Sbadiglio",
+            "Calmamente / Protezione"
+          ],
+          "roles": [
+            "speciale folletto",
+            "anti-drago",
+            "bulky special"
+          ],
+          "notes": "Rapidartiglio è provvisorio: meglio uno strumento stabile."
+        },
+        "doubles": {
+          "item": "Baccacedro / Stolascelta / Avanzi",
+          "ability": "Pellefolletto",
+          "nature": "Modesta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco Speciale",
+          "moves": [
+            "Granvoce",
+            "Protezione",
+            "Palla Ombra",
+            "Sbadiglio / Calmamente"
+          ],
+          "roles": [
+            "spread attacker",
+            "supporto speciale"
+          ],
+          "notes": "Granvoce è molto più preziosa in Doppio."
+        }
+      },
+      "formatScores": {
+        "singles": 84,
+        "doubles": 88
+      },
+      "ability": "Pellefolletto"
+    },
+    {
+      "name": "Froslass",
+      "owned": true,
+      "role": "Veloce fragile / utility",
+      "score": 71,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Lucario",
+      "owned": true,
+      "role": "Mega / setup speciale",
+      "score": 83,
+      "builds": {
+        "singles": {
+          "item": "Lucarite",
+          "ability": "Forza Interiore",
+          "nature": "Timida / Modesta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco Speciale + Velocità",
+          "moves": [
+            "Congiura",
+            "Sferapulsar",
+            "Cannonflash",
+            "Vuotonda"
+          ],
+          "roles": [
+            "setup speciale",
+            "cleaner",
+            "mega"
+          ],
+          "notes": "Buono in Singolo come cleaner dopo Congiura."
+        },
+        "doubles": {
+          "item": "Lucarite / Focalnastro",
+          "ability": "Forza Interiore",
+          "nature": "Timida / Modesta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco Speciale + Velocità",
+          "moves": [
+            "Protezione",
+            "Sferapulsar",
+            "Cannonflash",
+            "Vuotonda"
+          ],
+          "roles": [
+            "attaccante speciale",
+            "pressione immediata"
+          ],
+          "notes": "In Doppio preferisce Protezione."
+        }
+      },
+      "formatScores": {
+        "singles": 88,
+        "doubles": 80
+      }
+    },
+    {
+      "name": "Gyarados",
+      "owned": true,
+      "role": "Fisico con Dragodanza",
+      "score": 85,
+      "builds": {
+        "singles": {
+          "item": "Baccaprugna / Luminpolvere / Focalnastro",
+          "ability": "Prepotenza se disponibile",
+          "nature": "Allegra / Decisa",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "Attacco + Velocità",
+          "moves": [
+            "Dragodanza",
+            "Cascata",
+            "Sgranocchio",
+            "Terremoto / Gelodenti"
+          ],
+          "roles": [
+            "setup fisico",
+            "sweeper"
+          ],
+          "notes": "Candidato fortissimo in Singolo."
+        },
+        "doubles": {
+          "item": "Baccaprugna / Focalnastro",
+          "ability": "Prepotenza se disponibile",
+          "nature": "Decisa / Allegra",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco + Velocità",
+          "moves": [
+            "Protezione",
+            "Cascata",
+            "Sgranocchio",
+            "Gelodenti / Provocazione"
+          ],
+          "roles": [
+            "intimidate",
+            "attaccante fisico"
+          ],
+          "notes": "In Doppio vale molto se ha Prepotenza."
+        }
+      },
+      "formatScores": {
+        "singles": 90,
+        "doubles": 81
+      }
+    },
+    {
+      "name": "Victreebel",
+      "owned": true,
+      "role": "Erba/Veleno utility",
+      "score": 62,
+      "builds": {
+        "singles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        },
+        "doubles": {
+          "item": "",
+          "ability": "",
+          "nature": "",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "",
+          "moves": [],
+          "roles": [],
+          "notes": ""
+        }
+      }
+    },
+    {
+      "name": "Annihilape",
+      "owned": true,
+      "role": "Fisico bulky / win condition Lotta-Spettro",
+      "score": 88,
+      "builds": {
+        "singles": {
+          "item": "Baccacedro / Avanzi / Focalnastro",
+          "ability": "Forza Interiore; Agonismo se disponibile",
+          "nature": "Decisa / Scaltra / Cauta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco + Difesa Speciale",
+          "moves": [
+            "Pugno Furibondo",
+            "Assorbipugno",
+            "Granfisico",
+            "Provocazione"
+          ],
+          "roles": [
+            "bulky setup",
+            "anti-stall",
+            "win condition"
+          ],
+          "notes": "Priorità alta. Entra subito nei candidati principali; Raichu è il primo taglio probabile."
+        },
+        "doubles": {
+          "item": "Baccacedro / Avanzi / Focalnastro",
+          "ability": "Agonismo se disponibile; Forza Interiore provvisoria",
+          "nature": "Decisa / Cauta",
+          "evs": "",
+          "ivs": "",
+          "statsFocus": "PS + Attacco + bulk speciale",
+          "moves": [
+            "Pugno Furibondo",
+            "Assorbipugno",
+            "Protezione",
+            "Provocazione"
+          ],
+          "roles": [
+            "attaccante bulky",
+            "anti-support",
+            "anti-Intimidate"
+          ],
+          "notes": "In Doppio serve Protezione; ottimo accanto a Sylveon o supporti che gli danno tempo."
+        }
+      },
+      "types": [
+        "Lotta",
+        "Spettro"
+      ],
+      "ability": "Forza Interiore",
+      "currentNature": "Fiacca",
+      "currentMoves": [
+        "Pugno Furibondo",
+        "Pietrataglio",
+        "Provocazione",
+        "Facciata"
+      ],
+      "statsSeen": {
+        "PS": 187,
+        "Attacco": 167,
+        "Difesa": 145,
+        "Attacco Speciale": 70,
+        "Difesa Speciale": 99,
+        "Velocità": 110
+      },
+      "formatScores": {
+        "singles": 91,
+        "doubles": 89
+      }
+    }
+  ],
+  "items": [
+    "Erbachiara",
+    "Stolascelta",
+    "Miracolseme",
+    "Bandana",
+    "Focalnastro",
+    "Avanzi",
+    "Baccaprugna",
+    "Baccacedro",
+    "Raichuite X",
+    "Raichuite Y",
+    "Dragonitite",
+    "Lucarite",
+    "Chesnaughtite",
+    "Luminpolvere",
+    "Rapidartiglio",
+    "Roccia di re"
+  ],
+  "recruits": [
+    {
+      "name": "Incineroar",
+      "cost": 3000,
+      "score": 92,
+      "note": "Supporto fisico, pivot, ottima utilità teorica"
+    },
+    {
+      "name": "Amoonguss",
+      "cost": 2800,
+      "score": 90,
+      "note": "Supporto, controllo ritmo, ottimo in team bulky"
+    },
+    {
+      "name": "Flutter Mane",
+      "cost": 4000,
+      "score": 94,
+      "note": "Attaccante speciale velocissimo se disponibile"
+    },
+    {
+      "name": "Ursaluna",
+      "cost": 3500,
+      "score": 89,
+      "note": "Abusatore Distortozona con pressione fisica"
+    },
+    {
+      "name": "Tornadus",
+      "cost": 3800,
+      "score": 91,
+      "note": "Speed control offensivo se disponibile"
+    }
+  ],
+  "advisorNotes": "v1.0: aggiunto Annihilape e Build Advisor locale separato per Singolo/Doppio. Nessuna IA integrata."
+}

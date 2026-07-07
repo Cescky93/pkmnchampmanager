@@ -11,7 +11,7 @@
 :root{--bg:#101222;--card:#191c33;--card2:#222646;--text:#f5f6ff;--muted:#aab0d6;--primary:#7d6dff;--primary2:#9dff57;--danger:#ff5d7a;--line:#303657;--warn:#ffd166;--shadow:0 16px 40px rgba(0,0,0,.28)}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#273064 0,#101222 48%,#0b0d18 100%);color:var(--text);padding-bottom:92px}button,input,select,textarea{font:inherit}button{border:0;border-radius:16px;padding:12px 16px;background:var(--card2);color:var(--text);font-weight:750}button:active{transform:scale(.98)}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:16px;background:#101426;color:var(--text);padding:13px 14px;outline:none}textarea{min-height:360px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}.app-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;background:linear-gradient(180deg,rgba(16,18,34,.96),rgba(16,18,34,.76));backdrop-filter:blur(10px)}h1{font-size:24px;margin:0}h2{font-size:19px;margin:0 0 14px}.eyebrow{margin:0 0 2px;color:var(--primary2);text-transform:uppercase;font-size:12px;font-weight:800;letter-spacing:.08em}.muted{color:var(--muted)}main{padding:0 14px}.screen{display:none;max-width:980px;margin:auto}.screen.active{display:block}.card{background:linear-gradient(180deg,rgba(25,28,51,.98),rgba(21,24,43,.98));border:1px solid var(--line);border-radius:24px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}.hero{display:flex;justify-content:space-between;gap:16px;align-items:center;background:linear-gradient(135deg,#2a2f61,#181b35)}.pv-row{display:flex;align-items:center;gap:10px}.pv-row input{font-size:26px;font-weight:900;max-width:190px}.pv-row span{font-weight:900;color:var(--primary2)}.primary{background:linear-gradient(135deg,var(--primary),#5648e7);color:white}.danger{background:rgba(255,93,122,.15);color:#ff9bad;border:1px solid rgba(255,93,122,.35)}.pill{border-radius:999px;background:var(--primary2);color:#11152a}.hidden{display:none}.full{width:100%}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat span{display:block;color:var(--muted);font-size:13px}.stat strong{font-size:26px}.callout{border-left:4px solid var(--primary2);padding:12px;background:rgba(157,255,87,.07);border-radius:14px}.team-mini{display:flex;flex-wrap:wrap;gap:8px}.team-mini span{padding:10px 12px;border-radius:999px;background:#252a4d;border:1px solid var(--line);font-weight:800}.controls label{display:block;margin:12px 0;color:var(--muted);font-weight:650}.controls label select,.controls label input{margin-top:6px}.team-cards{display:grid;grid-template-columns:1fr;gap:12px}.poke-card{border:1px solid var(--line);background:#11162a;border-radius:20px;padding:14px}.poke-card.hire{border-color:rgba(157,255,87,.55)}.poke-card header{display:flex;justify-content:space-between;gap:10px}.poke-card strong{font-size:18px}.poke-card em{color:var(--primary2);font-style:normal;font-size:12px;text-align:right}.poke-card p{margin:8px 0;color:#dce0ff}.warn{color:var(--warn)}.plan{padding-left:22px}.plan li{margin:10px 0;padding:12px;border-radius:16px;background:#11162a}.plan li span{color:var(--primary2);font-weight:900}.plan li b{float:right}.plan li.locked{opacity:.58}.inline-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:12px}.hire-form{display:grid;grid-template-columns:1fr 110px;gap:8px}.hire-form select,.hire-form button{grid-column:span 2}.list,.item-list{display:grid;gap:10px}.row-card{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);background:#11162a;border-radius:18px;padding:12px}.row-card small{display:block;color:var(--muted);margin-top:3px}.small{padding:8px 10px;border-radius:12px}.qty{display:flex;gap:6px}.qty button{min-width:42px}.item-list h3{margin:12px 0 0;color:var(--primary2);font-size:15px}.button-stack{display:grid;gap:10px;margin-bottom:12px}.file-label{display:block;text-align:center;border-radius:16px;padding:12px 16px;background:var(--card2);font-weight:750}.file-label input{display:none}.bottom-nav{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(12,14,28,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);z-index:20}.bottom-nav a{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:10px 4px;border-radius:14px;font-size:12px;font-weight:750;color:var(--muted);background:transparent;min-height:42px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bottom-nav a.active{background:var(--primary);color:white}@media(min-width:760px){main{padding:0 24px}.team-cards{grid-template-columns:repeat(2,1fr)}.hire-form{grid-template-columns:1fr 140px 180px auto}.hire-form select,.hire-form button{grid-column:auto}.bottom-nav{left:50%;transform:translateX(-50%);max-width:920px;border-radius:24px 24px 0 0}.app-header{padding-left:32px;padding-right:32px}}
 
-/* v0.6 one-file nav */
+/* v0.7 importfix one-file */
 
 
 .top-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:980px;margin:8px auto 0;padding:0 14px}.top-tabs button,.bottom-nav button{cursor:pointer;user-select:none}.top-tabs button{font-size:13px;border:1px solid var(--line)}.top-tabs button.active,.bottom-nav button.active{background:var(--primary);color:#fff}.bottom-nav button{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:10px 4px;border-radius:14px;font-size:12px;font-weight:750;color:var(--muted);background:transparent;min-height:42px;-webkit-tap-highlight-color:transparent;touch-action:manipulation} .bottom-nav a{display:none!important}
@@ -149,7 +149,9 @@
         <div class="button-stack">
           <button id="exportAiBtn" class="primary">Esporta richiesta per IA</button>
           <button id="downloadJsonBtn">Scarica JSON</button>
-          <label class="file-label">Importa JSON<input id="importJson" type="file" accept="application/json"></label>
+          <label class="file-label">Importa JSON<input id="importJson" type="file" accept="application/json,.json"></label>
+          <button id="applyJsonBtn">Applica JSON incollato</button>
+          <p id="importStatus" class="callout hidden"></p>
           <button id="resetBtn" class="danger">Ripristina dati iniziali</button>
         </div>
         <textarea id="jsonEditor" spellcheck="false"></textarea>
@@ -169,7 +171,7 @@
 
   <script>
 const DEFAULT_DATA = {
-  version: "0.6-onefile",
+  version: "0.7-importfix",
   updatedAt: "2026-07-07",
   pv: 8366,
   language: "it",
@@ -260,7 +262,7 @@ const DEFAULT_DATA = {
   ]
 };
 
-const STORAGE_KEY = "champions-manager-data-v06";
+const STORAGE_KEY = "champions-manager-data-v07";
 let data = loadData();
 let deferredInstallPrompt = null;
 
@@ -274,6 +276,34 @@ function loadData() {
   } catch {
     return clone(DEFAULT_DATA);
   }
+}
+
+function normalizeImportedData(raw) {
+  if (!raw || typeof raw !== "object") throw new Error("JSON vuoto o non valido");
+  const base = clone(DEFAULT_DATA);
+  const out = {...base, ...raw};
+  out.version = raw.version || "importato";
+  out.pv = Number(raw.pv ?? base.pv ?? 0);
+  out.language = raw.language || "it";
+  out.currentTeam = Array.isArray(raw.currentTeam) ? raw.currentTeam : base.currentTeam;
+  out.items = Array.isArray(raw.items) ? raw.items.map(i => ({name:String(i.name||""), category:i.category||"Altro", qty:Number(i.qty ?? 1)})).filter(i=>i.name) : base.items;
+  out.pokemon = Array.isArray(raw.pokemon) ? raw.pokemon.map(p => ({...p, name:String(p.name||""), owned:Boolean(p.owned), types:Array.isArray(p.types)?p.types:[], tags:Array.isArray(p.tags)?p.tags:[], current:p.current||{}, ideal:p.ideal||{}, upgrades:Array.isArray(p.upgrades)?p.upgrades:[]})).filter(p=>p.name) : base.pokemon;
+  out.hires = Array.isArray(raw.hires) ? raw.hires.map(h => ({...h, name:String(h.name||""), owned:Boolean(h.owned), types:Array.isArray(h.types)?h.types:[], tags:Array.isArray(h.tags)?h.tags:[], role:h.role||"da definire", meta:Number(h.meta||70), cost:Number(h.cost||0), note:h.note||""})).filter(h=>h.name) : base.hires;
+  return out;
+}
+function setImportStatus(message, ok=true) {
+  const el = $("importStatus");
+  if (!el) return;
+  el.classList.remove("hidden");
+  el.innerHTML = message;
+  el.style.borderLeftColor = ok ? "var(--primary2)" : "#ff5d7a";
+}
+function applyImportedData(raw, source="JSON") {
+  data = normalizeImportedData(raw);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  renderAll();
+  setImportStatus(`Import ${source} riuscito: <b>${data.pv}</b> PV · <b>${ownedPokemon().length}</b> Pokémon posseduti · <b>${(data.items||[]).length}</b> strumenti.`);
+  goToScreen("home");
 }
 function saveData() {
   data.updatedAt = new Date().toISOString().slice(0, 10);
@@ -509,12 +539,15 @@ $("addHireBtn").onclick = () => {
 };
 $("exportAiBtn").onclick = exportAI;
 $("downloadJsonBtn").onclick = () => download("champions-manager-dati.json", JSON.stringify(data, null, 2));
-$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { localStorage.removeItem("champions-manager-data-v02"); localStorage.removeItem("champions-manager-data-v03"); localStorage.removeItem("champions-manager-data-v05"); data = clone(DEFAULT_DATA); saveData(); } };
-$("jsonEditor").onchange = () => { try { data = JSON.parse($("jsonEditor").value); saveData(); } catch { alert("JSON non valido"); } };
-$("importJson").onchange = async (ev) => {
-  const file = ev.target.files[0]; if (!file) return;
-  try { data = JSON.parse(await file.text()); saveData(); } catch { alert("File JSON non valido"); }
-};
+$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { ["champions-manager-data-v02","champions-manager-data-v03","champions-manager-data-v05","champions-manager-data-v06","champions-manager-data-v07"].forEach(k=>localStorage.removeItem(k)); data = clone(DEFAULT_DATA); saveData(); setImportStatus("Dati iniziali ripristinati."); } };
+$("jsonEditor").onchange = () => { try { applyImportedData(JSON.parse($("jsonEditor").value), "editor"); } catch (err) { console.error(err); alert("JSON non valido"); setImportStatus("JSON editor non valido.", false); } };
+$("applyJsonBtn").onclick = () => { try { applyImportedData(JSON.parse($("jsonEditor").value), "incollato"); } catch (err) { console.error(err); alert("JSON non valido"); setImportStatus("JSON incollato non valido.", false); } };
+$("importJson").addEventListener("change", async (ev) => {
+  const file = ev.target.files && ev.target.files[0]; if (!file) return;
+  try { applyImportedData(JSON.parse(await file.text()), file.name); }
+  catch (err) { console.error(err); alert("File JSON non valido o schema non riconosciuto"); setImportStatus("File JSON non valido o schema non riconosciuto.", false); }
+  finally { ev.target.value = ""; }
+});
 renderAll();
 syncScreenFromHash();
 

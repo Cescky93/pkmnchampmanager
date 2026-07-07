@@ -1,4 +1,4 @@
-const STORAGE_KEY = "champions-manager-data-v04";
+const STORAGE_KEY = "champions-manager-data-v05";
 let data = loadData();
 let deferredInstallPrompt = null;
 
@@ -200,12 +200,12 @@ $("installBtn").onclick = async () => { if (deferredInstallPrompt) deferredInsta
 function goToScreen(screenId) {
   const target = document.getElementById(screenId);
   if (!target) return;
-  document.querySelectorAll(".bottom-nav button").forEach(b => b.classList.toggle("active", b.dataset.screen === screenId));
+  document.querySelectorAll(".bottom-nav a").forEach(b => b.classList.toggle("active", b.dataset.screen === screenId));
   document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === screenId));
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Navigazione v0.4: usa hash link reali, quindi funziona anche se il browser gestisce male click/touch sui pulsanti.
+// Navigazione v0.5: doppio sistema. CSS :target funziona anche senza JS; JS serve solo per active state e scroll.
 function screenFromHash() {
   const id = (location.hash || "#home").replace("#", "");
   return document.getElementById(id) ? id : "home";
@@ -220,6 +220,17 @@ document.querySelector(".bottom-nav")?.addEventListener("click", (ev) => {
   setTimeout(syncScreenFromHash, 0);
 });
 window.addEventListener("hashchange", syncScreenFromHash);
+// Forza anche click/touch, senza affidarsi solo al cambio hash.
+document.querySelectorAll(".bottom-nav a[data-screen]").forEach(a => {
+  const open = (ev) => {
+    const id = a.dataset.screen;
+    if (!id) return;
+    if (location.hash !== "#" + id) location.hash = id;
+    goToScreen(id);
+  };
+  a.addEventListener("click", open, {passive:true});
+  a.addEventListener("touchend", open, {passive:true});
+});
 $("pvInput").onchange = () => { data.pv = Number($("pvInput").value || 0); saveData(); };
 $("recalcHome").onclick = renderAll;
 $("optimizeBtn").onclick = () => renderTeamResult(optimize($("calcMode").value, $("teamStyle").value), $("calcMode").value);
@@ -244,7 +255,7 @@ $("addHireBtn").onclick = () => {
 };
 $("exportAiBtn").onclick = exportAI;
 $("downloadJsonBtn").onclick = () => download("champions-manager-dati.json", JSON.stringify(data, null, 2));
-$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { localStorage.removeItem("champions-manager-data-v02"); localStorage.removeItem("champions-manager-data-v03"); localStorage.removeItem("champions-manager-data-v04"); data = clone(DEFAULT_DATA); saveData(); } };
+$("resetBtn").onclick = () => { if(confirm("Ripristinare i dati iniziali?")) { localStorage.removeItem("champions-manager-data-v02"); localStorage.removeItem("champions-manager-data-v03"); localStorage.removeItem("champions-manager-data-v05"); data = clone(DEFAULT_DATA); saveData(); } };
 $("jsonEditor").onchange = () => { try { data = JSON.parse($("jsonEditor").value); saveData(); } catch { alert("JSON non valido"); } };
 $("importJson").onchange = async (ev) => {
   const file = ev.target.files[0]; if (!file) return;

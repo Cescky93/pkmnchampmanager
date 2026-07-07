@@ -1,4 +1,4 @@
-const CACHE_NAME = "pkmnchampmanager-v04";
+const CACHE_NAME = "pkmnchampmanager-v05";
 const ASSETS = ["./", "./index.html", "./styles.css", "./data.js", "./app.js", "./manifest.json"];
 self.addEventListener("install", event => {
   self.skipWaiting();

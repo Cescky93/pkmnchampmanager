@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#7c3aed">
-  <title>Pokémon Champions Manager v0.8</title>
+  <title>Pokémon Champions Manager v0.9</title>
   <style>
     :root{
       --bg:#0f1020;--card:#1a1b33;--card2:#23244a;--txt:#f6f7fb;--muted:#b8bad3;
@@ -45,14 +45,28 @@
     table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
     th{color:var(--muted);font-weight:700}
+
+    .formatTabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .formatTabs button{background:var(--card2);border:1px solid var(--line);color:var(--txt)}
+    .formatTabs button.active{background:var(--accent);color:#111827}
+    .selectGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:10px 0}
+    .selectCard{background:#111327;border:1px solid var(--line);border-radius:14px;padding:10px;min-height:70px}
+    .selectCard.selected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(163,230,53,.15)}
+    .selectCard.lead{outline:2px solid var(--ok)}
+    .selectCard small{display:block;color:var(--muted);margin-top:4px}
+    .savedBox{background:#111327;border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0}
+    .tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:3px 7px;margin:2px;background:var(--card2);color:var(--muted)}
+    .twoCols{display:grid;grid-template-columns:1fr;gap:12px}
+    @media (min-width:760px){.twoCols{grid-template-columns:1fr 1fr}}
+
     @media (min-width:760px){h1{font-size:22px}.bottomNav{max-width:980px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}}
   </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <h1>Pokémon Champions Manager <span class="muted">v0.8 cache-kill</span></h1>
-    <div class="sub">One-file · menu senza service worker · import JSON visibile · dati personali locali</div>
+    <h1>Pokémon Champions Manager <span class="muted">v0.9 Battle Format Builder</span></h1>
+    <div class="sub">One-file · Battle Format Builder · import/export JSON · dati personali locali</div>
     <nav class="tabsTop" id="tabsTop"></nav>
   </div>
 </header>
@@ -88,6 +102,16 @@
         <button onclick="optimize('theory')" class="secondary">Teorico con ingaggi</button>
       </div>
       <div id="teamResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>Battle Format Builder</h2>
+      <p class="muted">Da una squadra base di 6 Pokémon crea varianti per Singolo 3v3 e piani per Doppio.</p>
+      <div class="formatTabs">
+        <button id="fmtSinglesBtn" class="active" onclick="setFormatTab('singles')">Singolo 3v3</button>
+        <button id="fmtDoublesBtn" onclick="setFormatTab('doubles')">Doppio</button>
+      </div>
+      <div id="battleBuilder"></div>
     </div>
   </section>
 
@@ -131,7 +155,7 @@
       <div class="row">
         <button onclick="importFromFile()">Importa file JSON</button>
         <button onclick="exportJson()" class="secondary">Esporta JSON</button>
-        <button onclick="resetData()" class="danger">Reset dati v0.8</button>
+        <button onclick="resetData()" class="danger">Reset dati v0.9</button>
       </div>
       <div id="importStatus" class="notice">Nessun import eseguito in questa sessione.</div>
       <textarea id="jsonBox" placeholder="Qui puoi incollare o vedere il JSON..."></textarea>
@@ -150,11 +174,25 @@
 
 <nav class="bottomNav" id="bottomNav"></nav>
 
+
 <script>
-const VERSION = "v0.8-cachekill";
-const STORE_KEY = "pkmn_champions_manager_v08";
+const VERSION = "v0.9-battle-format-builder";
+const STORE_KEY = "pkmn_champions_manager_v09";
+const OLD_STORE_KEYS = ["pkmn_champions_manager_v08"];
+
+const emptyBuild = () => ({
+  item:"",
+  ability:"",
+  nature:"",
+  evs:"",
+  ivs:"",
+  moves:[],
+  roles:[],
+  notes:""
+});
 
 const defaultData = {
+  version: VERSION,
   pv: 8366,
   currentTeam: ["Lucario","Spiritomb","Sylveon","Dragonite","Snorlax","Raichu"],
   assignedItems: {
@@ -164,6 +202,10 @@ const defaultData = {
     "Dragonite":"Dragonitite",
     "Snorlax":"Avanzi",
     "Raichu":"Raichuite Y"
+  },
+  battlePlans: {
+    singlesSelections: [],
+    doublesPlans: []
   },
   roster: [
     {name:"Gourgeist", owned:true, role:"Bulky fisico / Spettro-Erba", score:67},
@@ -198,34 +240,81 @@ const defaultData = {
 };
 
 let state = loadData();
+let activeFormatTab = "singles";
+let draftSingles = {selected:[], lead:"", name:"Default 3v3", notes:""};
+let draftDoubles = {leadPair:[], backups:[], name:"Lead principale", notes:""};
 
 const tabs = [
   ["home","Home"],["team","Team"],["rosa","Rosa"],["oggetti","Oggetti"],["ingaggi","Ingaggi"],["dati","Dati"]
 ];
 
 function deepClone(x){return JSON.parse(JSON.stringify(x));}
+function makeId(prefix){return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,7);}
+function esc(s){return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
 function loadData(){
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || deepClone(defaultData); }
-  catch(e){ return deepClone(defaultData); }
+  try {
+    const current = localStorage.getItem(STORE_KEY);
+    if (current) return normalizeImported(JSON.parse(current));
+    for (const key of OLD_STORE_KEYS){
+      const old = localStorage.getItem(key);
+      if (old) return normalizeImported(JSON.parse(old));
+    }
+    return normalizeImported(deepClone(defaultData));
+  }
+  catch(e){ return normalizeImported(deepClone(defaultData)); }
 }
 function saveData(){
+  state.version = VERSION;
+  state = normalizeImported(state);
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
   render();
 }
+function normalizePokemon(p){
+  const out = typeof p === "string" ? ({name:p, owned:true, role:"Da classificare", score:65}) : {...p};
+  out.name = out.name || "Senza nome";
+  out.owned = out.owned !== false;
+  out.score = Number(out.score || 65);
+  out.role = out.role || "Da classificare";
+  out.builds = out.builds || {};
+  out.builds.singles = {...emptyBuild(), ...(out.builds.singles || {})};
+  out.builds.doubles = {...emptyBuild(), ...(out.builds.doubles || {})};
+  return out;
+}
 function normalizeImported(obj){
   const d = deepClone(defaultData);
-  const out = {...d, ...obj};
-  if (obj.pvDisponibili && !obj.pv) out.pv = obj.pvDisponibili;
-  if (obj.squadraAttuale && !obj.currentTeam) out.currentTeam = obj.squadraAttuale;
-  if (Array.isArray(obj.boxAttuale) && !obj.roster) out.roster = obj.boxAttuale.map(name => typeof name === "string" ? ({name, owned:true, role:"Da classificare", score:65}) : name);
-  if (Array.isArray(obj.oggettiDisponibili) && !obj.items) out.items = obj.oggettiDisponibili;
-  if (obj.oggettiAssegnati && !obj.assignedItems) out.assignedItems = obj.oggettiAssegnati;
-  out.roster = Array.isArray(out.roster) ? out.roster.map(p => typeof p === "string" ? ({name:p, owned:true, role:"Da classificare", score:65}) : {...p, owned:p.owned!==false, score:Number(p.score||65)}) : d.roster;
+  const out = {...d, ...(obj || {})};
+  if (obj && obj.pvDisponibili && !obj.pv) out.pv = obj.pvDisponibili;
+  if (obj && obj.squadraAttuale && !obj.currentTeam) out.currentTeam = obj.squadraAttuale;
+  if (obj && Array.isArray(obj.boxAttuale) && !obj.roster) out.roster = obj.boxAttuale.map(normalizePokemon);
+  if (obj && Array.isArray(obj.oggettiDisponibili) && !obj.items) out.items = obj.oggettiDisponibili;
+  if (obj && obj.oggettiAssegnati && !obj.assignedItems) out.assignedItems = obj.oggettiAssegnati;
+
+  out.roster = Array.isArray(out.roster) ? out.roster.map(normalizePokemon) : d.roster.map(normalizePokemon);
   out.items = Array.isArray(out.items) ? out.items : d.items;
   out.currentTeam = Array.isArray(out.currentTeam) ? out.currentTeam : d.currentTeam;
   out.recruits = Array.isArray(out.recruits) ? out.recruits : d.recruits;
   out.assignedItems = out.assignedItems || {};
   out.pv = Number(out.pv || 0);
+
+  out.battlePlans = out.battlePlans || {};
+  out.battlePlans.singlesSelections = Array.isArray(out.battlePlans.singlesSelections) ? out.battlePlans.singlesSelections : (Array.isArray(out.singlesSelections) ? out.singlesSelections : []);
+  out.battlePlans.doublesPlans = Array.isArray(out.battlePlans.doublesPlans) ? out.battlePlans.doublesPlans : (Array.isArray(out.doublesPlans) ? out.doublesPlans : []);
+  out.battlePlans.singlesSelections = out.battlePlans.singlesSelections.map(x => ({
+    id: x.id || makeId("singles"),
+    name: x.name || "Variante 3v3",
+    selectedPokemon: Array.isArray(x.selectedPokemon) ? x.selectedPokemon.slice(0,3) : [],
+    lead: x.lead || "",
+    notes: x.notes || ""
+  }));
+  out.battlePlans.doublesPlans = out.battlePlans.doublesPlans.map(x => ({
+    id: x.id || makeId("doubles"),
+    name: x.name || "Piano Doppio",
+    leadPair: Array.isArray(x.leadPair) ? x.leadPair.slice(0,2) : [],
+    backups: Array.isArray(x.backups) ? x.backups : [],
+    notes: x.notes || ""
+  }));
+  out.version = VERSION;
   return out;
 }
 
@@ -233,6 +322,7 @@ function go(id){
   location.hash = id;
   document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === id));
   document.querySelectorAll("[data-tab]").forEach(a => a.classList.toggle("active", a.dataset.tab === id));
+  if (id === "team") renderBattleBuilder();
 }
 function initNav(){
   const top = document.getElementById("tabsTop");
@@ -261,19 +351,200 @@ function render(){
   document.getElementById("pvView").textContent = Number(state.pv||0).toLocaleString("it-IT");
   document.getElementById("ownedCount").textContent = state.roster.filter(p=>p.owned!==false).length;
   document.getElementById("itemCount").textContent = state.items.length;
-  document.getElementById("currentTeamPills").innerHTML = state.currentTeam.map(n => `<span class="pill good">${n}${state.assignedItems[n] ? " · " + state.assignedItems[n] : ""}</span>`).join("");
+  document.getElementById("currentTeamPills").innerHTML = state.currentTeam.map(n => `<span class="pill good">${esc(n)}${state.assignedItems[n] ? " · " + esc(state.assignedItems[n]) : ""}</span>`).join("");
   document.getElementById("rosterList").innerHTML = renderRoster();
-  document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${x}</span>`).join("");
+  document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${esc(x)}</span>`).join("");
   document.getElementById("recruitsList").innerHTML = renderRecruits();
+  const active = document.getElementById("team")?.classList.contains("active");
+  if (active) renderBattleBuilder();
 }
 function renderRoster(){
-  const rows = state.roster.map(p => `<tr><td><b>${p.name}</b></td><td>${p.role||"Da classificare"}</td><td>${p.score||65}</td><td>${state.assignedItems[p.name]||"—"}</td></tr>`).join("");
+  const rows = state.roster.map(p => `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.role||"Da classificare")}</td><td>${esc(p.score||65)}</td><td>${esc(state.assignedItems[p.name]||"—")}</td></tr>`).join("");
   return `<table><thead><tr><th>Pokémon</th><th>Ruolo</th><th>Score</th><th>Oggetto</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 function renderRecruits(){
-  const rows = state.recruits.map(p => `<tr><td><b>${p.name}</b></td><td>${p.cost} PV</td><td>${p.score}</td><td>${p.note}</td></tr>`).join("");
+  const rows = state.recruits.map(p => `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.cost)} PV</td><td>${esc(p.score)}</td><td>${esc(p.note)}</td></tr>`).join("");
   return `<table><thead><tr><th>Pokémon</th><th>Costo stimato</th><th>Score</th><th>Nota</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
+
+function setFormatTab(tab){
+  activeFormatTab = tab;
+  renderBattleBuilder();
+}
+function teamMemberCards(mode){
+  const selected = mode === "singles" ? draftSingles.selected : draftDoubles.leadPair;
+  const backups = draftDoubles.backups;
+  return state.currentTeam.map(name => {
+    const isSelected = selected.includes(name);
+    const isBackup = backups.includes(name);
+    const isLead = mode === "singles" ? draftSingles.lead === name : false;
+    const p = state.roster.find(x => x.name === name) || {};
+    let small = state.assignedItems[name] ? state.assignedItems[name] : "Nessuno strumento";
+    if (mode === "doubles" && isBackup) small += " · backup";
+    return `<div class="selectCard ${isSelected ? "selected" : ""} ${isLead ? "lead" : ""}">
+      <b>${esc(name)}</b>
+      <small>${esc(small)}</small>
+      <small>${esc(p.role || "")}</small>
+      <div class="row" style="margin-top:8px">
+        <button class="secondary" onclick="${mode === "singles" ? `toggleSingles('${esc(name)}')` : `toggleDoubleLead('${esc(name)}')`}">${isSelected ? "Rimuovi" : "Seleziona"}</button>
+        ${mode === "singles" ? `<button class="secondary" onclick="setSinglesLead('${esc(name)}')" ${!draftSingles.selected.includes(name) ? "disabled" : ""}>Lead</button>` : `<button class="secondary" onclick="toggleDoubleBackup('${esc(name)}')">${isBackup ? "No backup" : "Backup"}</button>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+function renderBattleBuilder(){
+  const el = document.getElementById("battleBuilder");
+  if (!el) return;
+  document.getElementById("fmtSinglesBtn").classList.toggle("active", activeFormatTab === "singles");
+  document.getElementById("fmtDoublesBtn").classList.toggle("active", activeFormatTab === "doubles");
+  if (activeFormatTab === "singles") el.innerHTML = renderSinglesBuilder();
+  else el.innerHTML = renderDoublesBuilder();
+}
+function renderSinglesBuilder(){
+  const count = draftSingles.selected.length;
+  const saved = state.battlePlans.singlesSelections.map(x => `<div class="savedBox">
+    <div class="row"><b>${esc(x.name)}</b><span class="tag">${esc(x.selectedPokemon.length)}/3</span><span class="tag">Lead: ${esc(x.lead || "—")}</span></div>
+    <div>${x.selectedPokemon.map(n=>`<span class="pill good">${esc(n)}</span>`).join("")}</div>
+    ${x.notes ? `<div class="muted">${esc(x.notes)}</div>` : ""}
+    <div class="row" style="margin-top:8px"><button class="secondary" onclick="loadSinglesPlan('${x.id}')">Carica</button><button class="danger" onclick="deleteSinglesPlan('${x.id}')">Elimina</button></div>
+  </div>`).join("") || `<div class="muted">Nessuna variante 3v3 salvata.</div>`;
+  return `<div class="notice"><b>Singolo 3v3:</b> scegli esattamente 3 Pokémon dalla squadra da 6. Selezionati: <b>${count}/3</b></div>
+    <div class="selectGrid">${teamMemberCards("singles")}</div>
+    <div class="twoCols">
+      <div>
+        <label>Nome variante</label>
+        <input id="singlesName" value="${esc(draftSingles.name)}" oninput="draftSingles.name=this.value">
+      </div>
+      <div>
+        <label>Lead consigliato</label>
+        <select id="singlesLeadSelect" onchange="draftSingles.lead=this.value">
+          <option value="">Scegli lead tra i 3</option>
+          ${draftSingles.selected.map(n=>`<option value="${esc(n)}" ${draftSingles.lead===n?"selected":""}>${esc(n)}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <label>Note strategiche</label>
+    <textarea id="singlesNotes" style="min-height:90px" oninput="draftSingles.notes=this.value">${esc(draftSingles.notes)}</textarea>
+    <div class="row">
+      <button onclick="saveSinglesPlan()" class="good">Salva variante 3v3</button>
+      <button onclick="clearSinglesDraft()" class="secondary">Pulisci selezione</button>
+    </div>
+    <h3>Varianti salvate</h3>
+    ${saved}`;
+}
+function renderDoublesBuilder(){
+  const count = draftDoubles.leadPair.length;
+  const saved = state.battlePlans.doublesPlans.map(x => `<div class="savedBox">
+    <div class="row"><b>${esc(x.name)}</b><span class="tag">${esc(x.leadPair.length)}/2 lead</span></div>
+    <div><b>Lead:</b> ${x.leadPair.map(n=>`<span class="pill good">${esc(n)}</span>`).join("") || "—"}</div>
+    <div><b>Backup/core:</b> ${x.backups.map(n=>`<span class="pill">${esc(n)}</span>`).join("") || "—"}</div>
+    ${x.notes ? `<div class="muted">${esc(x.notes)}</div>` : ""}
+    <div class="row" style="margin-top:8px"><button class="secondary" onclick="loadDoublesPlan('${x.id}')">Carica</button><button class="danger" onclick="deleteDoublesPlan('${x.id}')">Elimina</button></div>
+  </div>`).join("") || `<div class="muted">Nessun piano Doppio salvato.</div>`;
+  return `<div class="notice"><b>Doppio:</b> scegli esattamente 2 Pokémon come coppia lead. Lead selezionati: <b>${count}/2</b></div>
+    <div class="selectGrid">${teamMemberCards("doubles")}</div>
+    <label>Nome piano</label>
+    <input id="doublesName" value="${esc(draftDoubles.name)}" oninput="draftDoubles.name=this.value">
+    <label>Note strategiche</label>
+    <textarea id="doublesNotes" style="min-height:90px" oninput="draftDoubles.notes=this.value">${esc(draftDoubles.notes)}</textarea>
+    <div class="row">
+      <button onclick="saveDoublesPlan()" class="good">Salva piano Doppio</button>
+      <button onclick="clearDoublesDraft()" class="secondary">Pulisci selezione</button>
+    </div>
+    <h3>Piani salvati</h3>
+    ${saved}`;
+}
+function toggleSingles(name){
+  if (draftSingles.selected.includes(name)){
+    draftSingles.selected = draftSingles.selected.filter(x => x !== name);
+    if (draftSingles.lead === name) draftSingles.lead = "";
+  } else {
+    if (draftSingles.selected.length >= 3){ alert("Nel Singolo 3v3 puoi selezionare esattamente 3 Pokémon."); return; }
+    draftSingles.selected.push(name);
+    if (!draftSingles.lead) draftSingles.lead = name;
+  }
+  renderBattleBuilder();
+}
+function setSinglesLead(name){
+  if (!draftSingles.selected.includes(name)){ alert("Il lead deve essere uno dei 3 selezionati."); return; }
+  draftSingles.lead = name;
+  renderBattleBuilder();
+}
+function saveSinglesPlan(){
+  if (draftSingles.selected.length !== 3){ alert("Devi selezionare esattamente 3 Pokémon."); return; }
+  if (!draftSingles.lead || !draftSingles.selected.includes(draftSingles.lead)){ alert("Scegli un lead tra i 3 selezionati."); return; }
+  state.battlePlans.singlesSelections.push({
+    id: makeId("singles"),
+    name: draftSingles.name.trim() || "Variante 3v3",
+    selectedPokemon: [...draftSingles.selected],
+    lead: draftSingles.lead,
+    notes: draftSingles.notes.trim()
+  });
+  clearSinglesDraft(false);
+  saveData();
+  alert("Variante Singolo 3v3 salvata.");
+}
+function clearSinglesDraft(doRender=true){
+  draftSingles = {selected:[], lead:"", name:"Default 3v3", notes:""};
+  if (doRender) renderBattleBuilder();
+}
+function loadSinglesPlan(id){
+  const x = state.battlePlans.singlesSelections.find(p => p.id === id);
+  if (!x) return;
+  draftSingles = {selected:[...x.selectedPokemon], lead:x.lead, name:x.name, notes:x.notes};
+  renderBattleBuilder();
+}
+function deleteSinglesPlan(id){
+  if (!confirm("Eliminare questa variante 3v3?")) return;
+  state.battlePlans.singlesSelections = state.battlePlans.singlesSelections.filter(p => p.id !== id);
+  saveData();
+}
+
+function toggleDoubleLead(name){
+  if (draftDoubles.leadPair.includes(name)){
+    draftDoubles.leadPair = draftDoubles.leadPair.filter(x => x !== name);
+  } else {
+    if (draftDoubles.leadPair.length >= 2){ alert("Nel Doppio la coppia lead deve contenere esattamente 2 Pokémon."); return; }
+    draftDoubles.leadPair.push(name);
+    draftDoubles.backups = draftDoubles.backups.filter(x => x !== name);
+  }
+  renderBattleBuilder();
+}
+function toggleDoubleBackup(name){
+  if (draftDoubles.leadPair.includes(name)){ alert("Un lead non può essere anche backup nello stesso piano."); return; }
+  if (draftDoubles.backups.includes(name)) draftDoubles.backups = draftDoubles.backups.filter(x => x !== name);
+  else draftDoubles.backups.push(name);
+  renderBattleBuilder();
+}
+function saveDoublesPlan(){
+  if (draftDoubles.leadPair.length !== 2){ alert("Devi scegliere esattamente 2 Pokémon come coppia lead."); return; }
+  state.battlePlans.doublesPlans.push({
+    id: makeId("doubles"),
+    name: draftDoubles.name.trim() || "Piano Doppio",
+    leadPair: [...draftDoubles.leadPair],
+    backups: [...draftDoubles.backups],
+    notes: draftDoubles.notes.trim()
+  });
+  clearDoublesDraft(false);
+  saveData();
+  alert("Piano Doppio salvato.");
+}
+function clearDoublesDraft(doRender=true){
+  draftDoubles = {leadPair:[], backups:[], name:"Lead principale", notes:""};
+  if (doRender) renderBattleBuilder();
+}
+function loadDoublesPlan(id){
+  const x = state.battlePlans.doublesPlans.find(p => p.id === id);
+  if (!x) return;
+  draftDoubles = {leadPair:[...x.leadPair], backups:[...x.backups], name:x.name, notes:x.notes};
+  renderBattleBuilder();
+}
+function deleteDoublesPlan(id){
+  if (!confirm("Eliminare questo piano Doppio?")) return;
+  state.battlePlans.doublesPlans = state.battlePlans.doublesPlans.filter(p => p.id !== id);
+  saveData();
+}
+
 function optimize(mode){
   let pool = state.roster.filter(p=>p.owned!==false).map(p=>({...p, source:"box", netScore:Number(p.score||65)}));
   let budget = Number(state.pv||0);
@@ -287,9 +558,11 @@ function optimize(mode){
     .filter(p => !namesPenalty.has(p.name) && namesPenalty.add(p.name))
     .sort((a,b)=>b.netScore-a.netScore)
     .slice(0,6);
-  const html = `<div class="notice"><b>${mode==="theory"?"Team teorico con ingaggi":"Team con risorse attuali"}</b><br>${team.map(p=>`${p.name}${p.source==="ingaggio"?" (ingaggio)":""}`).join(" · ")}</div>
+  const bestThree = [...team].sort((a,b)=>b.netScore-a.netScore).slice(0,3);
+  const html = `<div class="notice"><b>${mode==="theory"?"Team teorico con ingaggi":"Team con risorse attuali"}</b><br>${team.map(p=>`${esc(p.name)}${p.source==="ingaggio"?" (ingaggio)":""}`).join(" · ")}</div>
+  <div class="notice"><b>Bozza Singolo 3v3:</b> ${bestThree.map(p=>esc(p.name)).join(" · ")}<br><b>Lead provvisorio:</b> ${esc(bestThree[0]?.name || "—")}</div>
   <table><thead><tr><th>Pokémon</th><th>Fonte</th><th>Ruolo</th><th>Score</th></tr></thead><tbody>
-  ${team.map(p=>`<tr><td><b>${p.name}</b></td><td>${p.source}</td><td>${p.role||p.note||"—"}</td><td>${p.netScore}</td></tr>`).join("")}
+  ${team.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.source)}</td><td>${esc(p.role||p.note||"—")}</td><td>${esc(p.netScore)}</td></tr>`).join("")}
   </tbody></table>
   <div class="notice"><b>Priorità provvisoria:</b> valutare Gyarados, Zoroark Hisui e Rotom Vortice come alternative concrete a Raichu/Spiritomb; rivedere Rapidartiglio su Sylveon; confermare se Dragonite resta speciale o passa fisico.</div>`;
   document.getElementById("teamResult").innerHTML = html;
@@ -300,7 +573,7 @@ function addPokemon(){
   const input = document.getElementById("newPokemonName");
   const name = input.value.trim();
   if (!name) return;
-  if (!state.roster.some(p=>p.name.toLowerCase()===name.toLowerCase())) state.roster.push({name, owned:true, role:"Aggiunto manualmente", score:65});
+  if (!state.roster.some(p=>p.name.toLowerCase()===name.toLowerCase())) state.roster.push(normalizePokemon({name, owned:true, role:"Aggiunto manualmente", score:65}));
   input.value = "";
   saveData();
 }
@@ -321,7 +594,7 @@ function importFromFile(){
       state = normalizeImported(JSON.parse(reader.result));
       saveData();
       document.getElementById("jsonFile").value = "";
-      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti.`);
+      statusMsg(`Import riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v0.9.`);
       go("home");
     }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
   };
@@ -333,31 +606,33 @@ function importFromText(){
     if (!txt){ statusMsg("Incolla prima un JSON.", true); return; }
     state = normalizeImported(JSON.parse(txt));
     saveData();
-    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti.`);
+    statusMsg(`Import da testo riuscito: ${state.pv.toLocaleString("it-IT")} PV · ${state.roster.length} Pokémon · ${state.items.length} strumenti · dati migrati a v0.9.`);
     go("home");
   }catch(e){ statusMsg("Import fallito: JSON non valido. " + e.message, true); }
 }
 function exportJson(){
+  state = normalizeImported(state);
   const txt = JSON.stringify(state,null,2);
   document.getElementById("jsonBox").value = txt;
   const blob = new Blob([txt], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = "champions-manager-dati-export-v08.json";
+  a.href = url; a.download = "champions-manager-dati-export-v09.json";
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  statusMsg("Export generato.");
+  statusMsg("Export v0.9 generato con build Singolo/Doppio, varianti 3v3 e piani Doppio.");
   go("dati");
 }
 async function copyJson(){
+  state = normalizeImported(state);
   const txt = JSON.stringify(state,null,2);
   document.getElementById("jsonBox").value = txt;
   try{ await navigator.clipboard.writeText(txt); statusMsg("JSON copiato negli appunti."); }
   catch(e){ statusMsg("JSON mostrato nel riquadro: copia manualmente.", true); }
 }
 function resetData(){
-  if (!confirm("Resetto i dati locali v0.8 e torno ai dati iniziali?")) return;
-  state = deepClone(defaultData);
+  if (!confirm("Resetto i dati locali v0.9 e torno ai dati iniziali?")) return;
+  state = normalizeImported(deepClone(defaultData));
   saveData();
   statusMsg("Reset completato.");
 }
@@ -380,9 +655,10 @@ async function killOldServiceWorkers(){
 }
 (function boot(){
   initNav();
+  state = normalizeImported(state);
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
   render();
   go((location.hash||"#home").slice(1));
-  // Tentativo automatico soft: disattiva vecchi service worker senza bloccare l'app.
   if ("serviceWorker" in navigator){
     navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(()=>{});
   }

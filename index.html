@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#7c3aed">
-  <title>Pokémon Champions Manager v1.2</title>
+  <title>Pokémon Champions Manager v1.3</title>
   <style>
     :root{
       --bg:#0f1020;--card:#1a1b33;--card2:#23244a;--txt:#f6f7fb;--muted:#b8bad3;
@@ -116,14 +116,27 @@
 
     @media (min-width:760px){.heroActions{grid-template-columns:repeat(3,1fr)}.teamSlots{grid-template-columns:repeat(2,1fr)}.slotInputs{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1fr auto auto}.formGrid{grid-template-columns:1.2fr 1fr 1fr 1fr}.quickInputs{grid-template-columns:1fr 1fr auto}.hero h2{font-size:30px}}
 
+
+    /* v1.3 Quick Edit */
+    .quickEditShell{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+    .quickEditTop{display:grid;grid-template-columns:1fr;gap:8px;align-items:end}
+    .quickEditBox{background:#111327;border:1px solid rgba(163,230,53,.22);border-radius:18px;padding:12px}
+    .quickMoves{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .quickStats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .quickEditBox input,.quickEditBox select{margin:0}
+    .teamSlotActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+    .teamSlotActions button{padding:8px 9px;font-size:12px}
+    .tinyBtn{padding:8px 9px;font-size:12px}
+    @media (min-width:760px){.quickEditTop{grid-template-columns:1.2fr .9fr .9fr auto}.quickEditShell{grid-template-columns:1fr}.quickMoves{grid-template-columns:repeat(4,1fr)}.quickStats{grid-template-columns:repeat(6,1fr)}}
+
     @media (min-width:760px){h1{font-size:22px}.bottomNav{max-width:980px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}}
   </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <h1>Pokémon Champions Manager <span class="muted">v1.2 Trainer Data Editor</span></h1>
-    <div class="sub">Archivio tecnico · editor allenamento · mosse/statistiche/natura · export prompt IA · dati locali</div>
+    <h1>Pokémon Champions Manager <span class="muted">v1.3 Quick Edit</span></h1>
+    <div class="sub">Archivio tecnico · Quick Edit Pokémon · mosse/statistiche/natura · export prompt IA · dati locali</div>
     <nav class="tabsTop" id="tabsTop"></nav>
   </div>
 </header>
@@ -156,14 +169,20 @@
         <div id="quickResult" class="notice">Pronto. Aggiorna dati, genera consiglio o esporta per IA.</div>
       </div>
       <div class="card">
-        <div class="sectionTitle"><h2>Azioni veloci</h2><span class="tag">v1.1</span></div>
+        <div class="sectionTitle"><h2>Azioni veloci</h2><span class="tag">v1.3</span></div>
         <div class="row">
           <button onclick="optimize('current')">Ottimizza team</button>
-          <button onclick="go('rosa')" class="secondary">Modifica box</button>
+          <button onclick="go('home'); setTimeout(()=>document.getElementById('quickEditHomeCard')?.scrollIntoView({behavior:'smooth'}),50)" class="secondary">Quick Edit</button>
           <button onclick="go('dati')" class="secondary">Dati / JSON</button>
         </div>
         <p class="muted">L’app ora fa da taccuino tecnico: i consigli seri passano dall’export IA.</p>
       </div>
+    </div>
+
+    <div class="card" id="quickEditHomeCard">
+      <div class="sectionTitle"><h2>Quick Edit Pokémon</h2><span class="tag">uso quotidiano</span></div>
+      <p class="muted">Modifica veloce dei dati reali senza passare da JSON: scegli Pokémon, cambia natura, abilità, oggetto, mosse e statistiche, poi salva.</p>
+      <div id="quickPokemonEditor"></div>
     </div>
 
     <div class="card">
@@ -224,8 +243,8 @@
       <div id="rosterList"></div>
     </div>
     <div class="card editJump" id="pokemonEditorCard">
-      <div class="sectionTitle"><h2>Editor Pokémon allenato</h2><span class="tag">v1.2 manuale da telefono</span></div>
-      <p class="muted">Qui puoi inserire da solo tutto quello che cambia quando alleni un Pokémon: mosse, natura, abilità, oggetto, statistiche e note. Se il nome esiste già, aggiorna la scheda invece di creare un doppione.</p>
+      <div class="sectionTitle"><h2>Editor Pokémon completo</h2><span class="tag">dettaglio avanzato</span></div>
+      <p class="muted">Qui resta l’editor completo per le modifiche più lunghe. Per l’uso normale usa il Quick Edit in Home o il tasto Modifica rapida sulle card.</p>
 
       <div class="formGrid">
         <input id="newPokemonName" placeholder="Nome Pokémon, es. Annihilape">
@@ -342,9 +361,9 @@
 
 
 <script>
-const VERSION = "v1.2-trainer-data-editor";
-const STORE_KEY = "pkmn_champions_manager_v12";
-const OLD_STORE_KEYS = ["pkmn_champions_manager_v11","pkmn_champions_manager_v10","pkmn_champions_manager_v09","pkmn_champions_manager_v08"];
+const VERSION = "v1.3-quick-edit";
+const STORE_KEY = "pkmn_champions_manager_v13";
+const OLD_STORE_KEYS = ["pkmn_champions_manager_v12","pkmn_champions_manager_v11","pkmn_champions_manager_v10","pkmn_champions_manager_v09","pkmn_champions_manager_v08"];
 
 const emptyBuild = () => ({
   item:"",
@@ -654,6 +673,7 @@ function render(){
   if (rosterEl) rosterEl.innerHTML = renderRosterCards();
   document.getElementById("itemsList").innerHTML = state.items.map(x=>`<span class="pill">${esc(x)}</span>`).join("");
   renderTeamManager();
+  renderQuickPokemonEditor();
   setQuickControls();
   document.getElementById("recruitsList").innerHTML = renderRecruits();
   const active = document.getElementById("team")?.classList.contains("active");
@@ -950,6 +970,115 @@ function itemOptions(selected=""){
   const all = ["", ...state.items];
   return all.map(x => `<option value="${esc(x)}" ${x===selected?"selected":""}>${esc(x || "Nessuno")}</option>`).join("");
 }
+let quickEditName = "";
+function quickPokemonOptions(selected=""){
+  const teamSet = new Set(state.currentTeam || []);
+  const team = ownedPool().filter(p => teamSet.has(p.name));
+  const rest = ownedPool().filter(p => !teamSet.has(p.name));
+  const make = p => `<option value="${esc(p.name)}" ${p.name===selected?"selected":""}>${esc(teamSet.has(p.name) ? "★ " + p.name : p.name)}</option>`;
+  return [...team, ...rest].map(make).join("");
+}
+function renderQuickPokemonEditor(){
+  const el = document.getElementById("quickPokemonEditor");
+  if (!el) return;
+  const fallback = state.currentTeam?.[0] || ownedPool()[0]?.name || "";
+  if (!quickEditName || !ownedPool().some(p => p.name === quickEditName)) quickEditName = fallback;
+  const p = getP(quickEditName);
+  const moves = p.currentMoves || [];
+  const stats = p.statsSeen || {};
+  const item = state.assignedItems[p.name] || "";
+  const status = p.trainingStatus || "";
+  el.innerHTML = `<div class="quickEditShell">
+    <div class="quickEditTop">
+      <div><label>Pokémon</label><select id="qeName" onchange="quickEditName=this.value; renderQuickPokemonEditor()">${quickPokemonOptions(p.name)}</select></div>
+      <div><label>Natura</label><input id="qeNature" placeholder="Natura" value="${esc(p.currentNature || "")}"></div>
+      <div><label>Abilità</label><input id="qeAbility" placeholder="Abilità" value="${esc(p.ability || "")}"></div>
+      <button onclick="saveQuickPokemon()" class="good">Salva</button>
+    </div>
+    <div class="quickEditBox">
+      <div class="quickEditTop">
+        <div><label>Oggetto</label><input id="qeItem" list="itemsDatalist" placeholder="Oggetto" value="${esc(item)}"></div>
+        <div><label>Stato</label><select id="qeStatus"><option value="" ${status===""?"selected":""}>Non segnato</option><option value="trained" ${status==="trained"?"selected":""}>Allenato</option><option value="partial" ${status==="partial"?"selected":""}>Parziale</option><option value="todo" ${status==="todo"?"selected":""}>Da allenare</option></select></div>
+        <div><label>Focus stats</label><input id="qeFocus" placeholder="PS + Attacco" value="${esc(p.evs || "")}"></div>
+        <button onclick="copyAdvisorBuildToQuick()" class="secondary">Usa build consigliata</button>
+      </div>
+      <datalist id="itemsDatalist">${state.items.map(x=>`<option value="${esc(x)}"></option>`).join("")}</datalist>
+    </div>
+    <div class="quickEditBox">
+      <h3>Mosse</h3>
+      <div class="quickMoves">
+        <input id="qeMove1" placeholder="Mossa 1" value="${esc(moves[0] || "")}">
+        <input id="qeMove2" placeholder="Mossa 2" value="${esc(moves[1] || "")}">
+        <input id="qeMove3" placeholder="Mossa 3" value="${esc(moves[2] || "")}">
+        <input id="qeMove4" placeholder="Mossa 4" value="${esc(moves[3] || "")}">
+      </div>
+    </div>
+    <div class="quickEditBox">
+      <h3>Statistiche</h3>
+      <div class="quickStats">
+        <input id="qeHp" type="number" inputmode="numeric" placeholder="PS" value="${esc(stats["PS"] || "")}">
+        <input id="qeAtk" type="number" inputmode="numeric" placeholder="Atk" value="${esc(stats["Attacco"] || "")}">
+        <input id="qeDef" type="number" inputmode="numeric" placeholder="Def" value="${esc(stats["Difesa"] || "")}">
+        <input id="qeSpa" type="number" inputmode="numeric" placeholder="SpA" value="${esc(stats["Attacco Speciale"] || "")}">
+        <input id="qeSpd" type="number" inputmode="numeric" placeholder="SpD" value="${esc(stats["Difesa Speciale"] || "")}">
+        <input id="qeSpe" type="number" inputmode="numeric" placeholder="Spe" value="${esc(stats["Velocità"] || "")}">
+      </div>
+    </div>
+    <div class="row"><button onclick="saveQuickPokemon()" class="good">Salva dati ${esc(p.name)}</button><button onclick="go('rosa'); loadPokemonIntoForm('${esc(p.name)}')" class="secondary">Apri editor completo</button><button onclick="exportAiPrompt()" class="secondary">Export IA</button></div>
+    <div id="quickEditStatus" class="notice">Quick Edit pronto: modifica solo quello che ti serve e salva.</div>
+  </div>`;
+}
+function quickEditFromName(name){
+  quickEditName = name;
+  go('home');
+  renderQuickPokemonEditor();
+  setTimeout(()=>document.getElementById('quickEditHomeCard')?.scrollIntoView({behavior:'smooth', block:'start'}),50);
+}
+function quickEditFromSlot(i){
+  const name = document.getElementById(`teamSlot_${i}`)?.value || state.currentTeam?.[i] || "";
+  if (!name) return alert("Seleziona prima un Pokémon nello slot.");
+  quickEditFromName(name);
+}
+function loadPokemonFromSlotFull(i){
+  const name = document.getElementById(`teamSlot_${i}`)?.value || state.currentTeam?.[i] || "";
+  if (!name) return alert("Seleziona prima un Pokémon nello slot.");
+  go('rosa');
+  setTimeout(()=>loadPokemonIntoForm(name),50);
+}
+function saveQuickPokemon(){
+  const name = document.getElementById("qeName")?.value || quickEditName;
+  if (!name) return alert("Scegli un Pokémon.");
+  let p = state.roster.find(x => x.name === name) || getP(name);
+  p.currentNature = document.getElementById("qeNature")?.value.trim() || "";
+  p.ability = document.getElementById("qeAbility")?.value.trim() || "";
+  p.trainingStatus = document.getElementById("qeStatus")?.value || "";
+  p.evs = document.getElementById("qeFocus")?.value.trim() || "";
+  const item = document.getElementById("qeItem")?.value.trim() || "";
+  state.assignedItems[p.name] = item;
+  if (item && !state.items.some(x => x.toLowerCase() === item.toLowerCase())) state.items.push(item);
+  p.currentMoves = ["qeMove1","qeMove2","qeMove3","qeMove4"].map(id => document.getElementById(id)?.value.trim() || "").filter(Boolean);
+  const statMap = {qeHp:"PS",qeAtk:"Attacco",qeDef:"Difesa",qeSpa:"Attacco Speciale",qeSpd:"Difesa Speciale",qeSpe:"Velocità"};
+  p.statsSeen = p.statsSeen || {};
+  for (const [id,key] of Object.entries(statMap)){
+    const raw = document.getElementById(id)?.value;
+    if (raw === "" || raw === undefined) delete p.statsSeen[key];
+    else p.statsSeen[key] = Number(raw);
+  }
+  quickEditName = p.name;
+  saveData();
+  const st = document.getElementById("quickEditStatus");
+  if (st) st.innerHTML = `<b>${esc(p.name)}</b> aggiornato. Puoi continuare con un altro Pokémon.`;
+}
+function copyAdvisorBuildToQuick(){
+  const p = getP(quickEditName);
+  const b = p.builds?.[activeFormatTab] || {};
+  if (!b || !Array.isArray(b.moves) || b.moves.length === 0) return alert("Nessuna build consigliata trovata per questo formato.");
+  ["qeMove1","qeMove2","qeMove3","qeMove4"].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.value = b.moves[i] || ""; });
+  const focus = document.getElementById("qeFocus"); if (focus) focus.value = b.statsFocus || "";
+  const nature = document.getElementById("qeNature"); if (nature && !nature.value) nature.value = b.nature || "";
+  const ability = document.getElementById("qeAbility"); if (ability && !ability.value) ability.value = b.ability || "";
+  const item = document.getElementById("qeItem"); if (item && !item.value) item.value = String(b.item || "").split("/")[0].trim();
+}
 function renderTeamManager(){
   const el = document.getElementById("teamManager");
   if (!el) return;
@@ -957,9 +1086,15 @@ function renderTeamManager(){
   while(team.length < 6) team.push(ownedPool()[team.length]?.name || "");
   el.innerHTML = `<div class="teamSlots">${team.slice(0,6).map((name,i)=>`<div class="teamSlot">
     <div class="slotNo">${i+1}</div>
-    <div class="slotInputs">
-      <select id="teamSlot_${i}" onchange="previewSlotItem(${i})"><option value="">Slot vuoto</option>${rosterOptions(name)}</select>
-      <select id="teamItem_${i}">${itemOptions(state.assignedItems[name] || "")}</select>
+    <div>
+      <div class="slotInputs">
+        <select id="teamSlot_${i}" onchange="previewSlotItem(${i})"><option value="">Slot vuoto</option>${rosterOptions(name)}</select>
+        <select id="teamItem_${i}">${itemOptions(state.assignedItems[name] || "")}</select>
+      </div>
+      <div class="teamSlotActions">
+        <button class="secondary tinyBtn" onclick="quickEditFromSlot(${i})">✏️ Modifica rapida</button>
+        <button class="secondary tinyBtn" onclick="loadPokemonFromSlotFull(${i})">Scheda completa</button>
+      </div>
     </div>
   </div>`).join("")}</div>`;
 }
@@ -1014,7 +1149,7 @@ function renderRosterCards(){
       ${formatStatsMini(p.statsSeen)}
       ${p.evs ? `<div class="moveLine"><b>Focus:</b> ${esc(p.evs)}</div>` : ""}
       ${p.trainingNotes ? `<div class="moveLine"><b>Note:</b> ${esc(p.trainingNotes)}</div>` : ""}
-      <div class="row" style="margin-top:8px"><button class="secondary" onclick="loadPokemonIntoForm('${esc(p.name)}')">Modifica completa</button><button class="secondary" onclick="addPokemonToTeam('${esc(p.name)}')">Nel team</button></div>
+      <div class="row" style="margin-top:8px"><button class="secondary" onclick="quickEditFromName('${esc(p.name)}')">Modifica rapida</button><button class="secondary" onclick="loadPokemonIntoForm('${esc(p.name)}')">Completa</button><button class="secondary" onclick="addPokemonToTeam('${esc(p.name)}')">Nel team</button></div>
     </div>`;
   }).join("")}</div>${!q && ownedPool().length>8 ? `<div class="notice">Mostrati ${list.length}/${ownedPool().length}. Usa ricerca o “Mostra tutti”.</div>` : ""}`;
 }
